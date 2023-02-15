@@ -9,5 +9,9 @@ plots2/
 
 __pycache__/
 
-tabs/
+tabs/*simpcoefs.m
+tabs/*simpcoefslist.m
+tabs/*simppermks.m
+tabs/*.mx
+
 covsks/
