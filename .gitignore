@@ -1,0 +1,17 @@
+plins/*/
+notes/
+
+Fishers/
+Fishers2/
+
+plots/
+plots2/
+
+__pycache__/
+
+tabs/*simpcoefs.m
+tabs/*simpcoefslist.m
+tabs/*simppermks.m
+tabs/*.mx
+
+covsks/
