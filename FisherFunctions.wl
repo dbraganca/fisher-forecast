@@ -6,6 +6,16 @@
 
 BeginPackage["FisherFunctions`"]
 
+(*public variables to be used outside*)
+{b1,c2,b2,Bb3,b3,Bb4,b4,b5,c4,Bb6,b6,Bb7,b7,Bb8,b8,Bb9,b9,Bb10,b10,
+Bb11,b11,b12,b13,b14,b15,Bc1,Bc2,Bc3,
+Bc4,Be1,Be2,ce2,Bc5,Bc6,Bc7,Bc8,
+Bc9,Bc10,Bc11,Bc12,Bc13,Bc14,Bd1,
+Bd2,Bd3,Be3,Be4,Be5,Be6,Be7,Be8,
+Be9,Be10,Be11,Be12,Tst,
+nb,knl,
+hback};
+
 fi::usage = "Number format for jmat imports"; 
 Tfi::usage = "String format for jmat imports"; 
 EV::usage = "Evaluates function on a table"; 
@@ -19,6 +29,12 @@ BAllcoefs::usage = "lists all cosmological+EFT+fNL parameters used";
 changeb1::usage = "Change bias values based on b1 rescaling";
 Evolve::usage = "Adjust biases with new time assuming 1/D dependence";
 shiftedbfixss::usage = "shift biases assuming same relation to b1";
+normbias
+
+fnlfix;
+paramfix;
+
+
 
 stochp;
 nonstoch;
@@ -36,13 +52,7 @@ B1LoopDerivs::usage = "Calculates an array of 1-loop bi-spectrum derivatives wit
 
 GetFullzCovP::usage = "Get covariances for power-spectrum for different z's";
 GetFullzCovPNS::usage = "Get covariances for power-spectrum with no shot noise for different z's";
-GetFullzCovPn::usage = "Get covariances for power-spectrum with shot noise given by (\!\(\*
-StyleBox[\"n\",\nFontSlant->\"Italic\"]\)\!\(\*
-StyleBox[\" \",\nFontSlant->\"Plain\"]\)\!\(\*
-StyleBox[\"x\",\nFontSlant->\"Italic\"]\)\!\(\*
-StyleBox[\" \",\nFontSlant->\"Italic\"]\)\!\(\*
-StyleBox[\"Be1\",\nFontSlant->\"Italic\"]\)\!\(\*
-StyleBox[\")\",\nFontSlant->\"Italic\"]\)for different z's";
+GetFullzCovPn::usage = "Get covariances for power-spectrum with shot noise given by (n x Be1)for different z's";
 
 GetFullzCovB::usage = "Get covariances for bi-spectrum for different z's";
 GetFullzCovBNS::usage = "Get covariances for bi-spectrum with no shot noise for different z's";
@@ -56,27 +66,32 @@ BLoopmastermono::usage = "Master angular integral tensor for 1-loop bispectrum m
 GetFisherB::usage = "calculates bi-spectrum Fisher matrix using analytical covariance, derivatives, and precomputed master integral tensor";
 GetFisherBNum::usage = "calculates bi-spectrum monopole Fisher matrix using numerical covariance and derivatives";
 
-
 jmatPath;
 loopTablesPath;
 covsPath;
 
-b25Toc24Sub;
-normbias;
-paramfix;
-(*rules\[Mu]1u;*)
-
 jmatimp;
 
 TabExport::usage = "Run to generate and save k-dependent coefficients to be used later";
+SubFisher;
+SubFisher4sky;
 
 B222kers;
+
+PTreeShot;
 
 Bcovlist;
 
 
 (* ::Section:: *)
 (*Private section*)
+
+
+(* ::Text:: *)
+(*TODO :*)
+(* Make P13 and P22 interp*)
+(* Careful: biaslist not matching with Yaniv*)
+(* I cannot import .mx: Should use either .m or .wl (or plain.dat)*)
 
 
 Begin["`Private`"]
@@ -86,7 +101,7 @@ Begin["`Private`"]
 (*Preliminaries: paths and imports*)
 
 
-jmatPath = "GitHub/python-integer-power-project/2. Jmat_loopvals/";
+jmatPath = "C:\\Users\\diogo\\Dropbox\\FFTLog\\Diogo_work\\GitHub\\python-integer-power-project\\2. Jmat_loopvals\\";
 loopTablesPath = "tabs/";
 savedCoefsPath = "saveloops/";
 covsPath = "covsks/";
@@ -94,11 +109,6 @@ covsPath = "covsks/";
 
 (* ::Subsubsection:: *)
 (*Background cosmology and shifts (including fNL)*)
-
-
-(* ::Text:: *)
-(*TODO:*)
-(*Make P13 and P22 interp*)
 
 
 (* Parameters: background cosmology, shift sizes, k-scales *)
@@ -130,6 +140,11 @@ fnlcoefs={fNLloc,fNLeq,fNLorth};
 fnlfix = {fNLloc->0,fNLeq->0,fNLorth->0};
 paramfix = {\[Delta]c->1.68,p->8.52};
 
+(* k-scales *)
+kr=knl/2.8`;
+km=knl;
+
+
 (* Nmax log k bins, form kmin to kmax *)
 kBins[Nmax_,kmin_,kmax_]:=
 	Module[{\[CapitalDelta],result},
@@ -154,7 +169,7 @@ Module[{nshigh,Ashigh,pextrahigh,kmax=1000},
 
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*EFT-parameters and related functions*)
 
 
@@ -201,7 +216,7 @@ cfixrescn[Dgold_,Dgnew_,biasfix_] := Join[{Be1->n (Be1/.biasfix)},Thread[stochp-
 shiftedbfixn[spec_,Dg_,biasfix_]:=Table[cfixrescn[Dg,spec[[5,i]],biasfix],{i,1,Length[spec[[5]]]}];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IR-resummation using Eisenstein-Hu*)
 
 
@@ -262,7 +277,7 @@ Module[{full,klin,plindat,pnw,pw,ipnw,ipw,\[CapitalSigma]2,\[Delta]\[CapitalSigm
 ];
 
 IRrep[splitwnw_] := {\[CapitalSigma]2-> splitwnw[[3]],\[Delta]\[CapitalSigma]2-> splitwnw[[4]]};
-\[CapitalSigma]tot2[\[Mu]_,f_]:=(1+f \[Mu]^2 (2+f))\[CapitalSigma]2+f^2 \[Mu]^2 (\[Mu]^2-1)\[Delta]\[CapitalSigma]2;
+\[CapitalSigma]tot2[\[Mu]1_,f_]:=(1+f \[Mu]1^2 (2+f))\[CapitalSigma]2+f^2 \[Mu]1^2 (\[Mu]1^2-1)\[Delta]\[CapitalSigma]2;
 
 
 (* ::Subsubsection::Closed:: *)
@@ -303,23 +318,9 @@ Module[{kmaxFit = 0.6, kminFit = 0.001, knFit, k,
 ];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Final functions to get fitting coefficients from IR-resummed power spectrum*)
 
-
-(*IRls[dat_,hfactor_,\[CapitalOmega]mfacor_,\[Omega]bfacor_,Asfactor_,nsfactor_,zpk_,f1_]:=
-Module[{iplin,splitwnw,ls,lsnw,iplinnw,iplinw,sig,iplinresum,iplinresumTree},
-	iplin =highval[dat]//Interpolation;
-	splitwnw=pwnwdat[dat,zpk,hback*hfactor,\[CapitalOmega]mback*\[CapitalOmega]mfacor,\[Omega]bback*\[Omega]bfacor,lnAsback+Asfactor,nsback*nsfactor];
-	ls=genPlinCoef[3,dat][[2]];
-lsnw=genPlinCoef[3,splitwnw[[1]]][[2]];
-iplinnw = highval[splitwnw[[1]]]//Interpolation;
-iplinw = highval[splitwnw[[2]]]//Interpolation;
-sig=\[CapitalSigma]tot2[\[Mu],f1]/.IRrep[splitwnw];
-iplinresum = pwnwavg[dat,f1,zpk,hback*hfactor,\[CapitalOmega]mback*\[CapitalOmega]mfacor,\[Omega]bback*\[Omega]bfacor,lnAsback+Asfactor,nsback*nsfactor]//Interpolation; 
-iplinresumTree = pwnwavgTree[dat,f1,zpk,hback*hfactor,\[CapitalOmega]mback*\[CapitalOmega]mfacor,\[Omega]bback*\[Omega]bfacor,lnAsback+Asfactor,nsback*nsfactor]//Interpolation; 
-{ls,lsnw,iplin,iplinnw,iplinw,sig,iplinresum,iplinresumTree,f1}
-]*)
 
 (*Final loading function for single power spectrum*)
 IRls[dat_,{h_,\[CapitalOmega]m_,\[Omega]b_,lnAs_,ns_},zpk_,f1_]:=
@@ -411,7 +412,7 @@ PlinsubsT[surveypath_, zpk_]:=Module[{Ts,Pks},
 ];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Utility functions for evaluating tables and Fisher matrix manipulations*)
 
 
@@ -632,7 +633,7 @@ fullPrior];
 Prior4sky = buildCorrPrior[priors, numCosmoFnlParams]/.priorrep;
 
 
-(* ::Subsubsection:: *)
+(* ::Subsection:: *)
 (*Power-spectrum Derivatives up to 1-loop - Resummed and Non-resummed*)
 
 
@@ -645,16 +646,16 @@ StochasticP22=1/nb (Be1+(Be2 k^2)/km^2+(3 ce2 k^2 \[Mu]1^2)/(2 km^2));
 PCounter[k_,plin_,f1_]=2 CounterP13+StochasticP22;
 
 (*Loop definitions and imports*)
-(*DumpGet["tabs/P13interp.mx"]; 
-DumpGet["tabs/P22interp.mx"];*)
+P13interp = Import[loopTablesPath<>"P13interp.m"];
+P22interp = Import[loopTablesPath<>"P22interp.m"]
 
-P13coefs[f1_] = Import[loopTablesPath<>"P13simpcoefs.m"]; 
+P13coefs[f1_] = Import[loopTablesPath<>"P13simpcoefs.m"]/.\[Mu]->\[Mu]1; 
 P13kers[k_] = Import[loopTablesPath<>"P13simppermks.m"];
 P13n[k_]:=P13kers[k].P13interp[k];
 P13ev[P13_,ls_,f_,Plink_]:=P13.ls.P13coefs[f] Plink;
 
-P22coefs[f1_] = Import["tabs/P22simpcoefs.m"]/.b2->(c2 + c4)/Sqrt[2]/.b5->(c2 - c4)/Sqrt[2]; 
-P22kers[k_] = Import["tabs/P22simppermks.m"];
+P22coefs[f1_] = Import[loopTablesPath<>"P22simpcoefs.m"]/.b2->(c2 + c4)/Sqrt[2]/.b5->(c2 - c4)/Sqrt[2]/.\[Mu]->\[Mu]1; 
+P22kers[k_] = Import[loopTablesPath<>"P22simppermks.m"];
 P22n[k_]:=P22kers[k].P22interp[k];
 P22ev[P22_,ls_,f_]:=P22.ls.ls.P22coefs[f];
 
@@ -847,7 +848,7 @@ TabExport[triangs_]:=Module[{B222precomp,file1,file2,file3,file4},
 		];													
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Preliminary functions and definitions*)
 
 
@@ -1033,7 +1034,7 @@ BLoopDerivsNR[triangle_,pks_]:=BLoopDerivsNR[triangle,pks]+BCounterDerivsNR[tria
 BTreeDerivsNR[triangle_,pks_]:=BTreeDerivsNR[triangle,pks]+BNGDerivs[triangle,pks];
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Covariance*)
 
 
