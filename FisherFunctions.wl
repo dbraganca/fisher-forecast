@@ -89,7 +89,6 @@ Bcovlist;
 
 (* ::Text:: *)
 (*TODO :*)
-(* Make P13 and P22 interp*)
 (* Careful: biaslist not matching with Yaniv*)
 (* I cannot import .mx: Should use either .m or .wl (or plain.dat)*)
 
@@ -103,11 +102,11 @@ Begin["`Private`"]
 
 jmatPath = "C:\\Users\\diogo\\Dropbox\\FFTLog\\Diogo_work\\GitHub\\python-integer-power-project\\2. Jmat_loopvals\\";
 loopTablesPath = "tabs/";
-savedCoefsPath = "saveloops/";
+saveLoopCoefsPath = "saveloops/";
 covsPath = "covsks/";
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Background cosmology and shifts (including fNL)*)
 
 
@@ -412,7 +411,7 @@ PlinsubsT[surveypath_, zpk_]:=Module[{Ts,Pks},
 ];
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Utility functions for evaluating tables and Fisher matrix manipulations*)
 
 
@@ -647,10 +646,12 @@ PCounter[k_,plin_,f1_]=2 CounterP13+StochasticP22;
 
 (*Loop definitions and imports*)
 P13interp = Import[loopTablesPath<>"P13interp.m"];
-P22interp = Import[loopTablesPath<>"P22interp.m"]
+P22interp = Import[loopTablesPath<>"P22interp.m"];
 
 P13coefs[f1_] = Import[loopTablesPath<>"P13simpcoefs.m"]/.\[Mu]->\[Mu]1; 
 P13kers[k_] = Import[loopTablesPath<>"P13simppermks.m"];
+
+
 P13n[k_]:=P13kers[k].P13interp[k];
 P13ev[P13_,ls_,f_,Plink_]:=P13.ls.P13coefs[f] Plink;
 
@@ -665,6 +666,13 @@ PNGfull[k_,{plin_,f1_,T\[Alpha]_}]:=(PNG[k, {fNLloc,0},{plin,f1,T\[Alpha]}]
 							 +PNG[k,{fNLeq,2},{plin,f1,T\[Alpha]}]
 							 +PNG[k,{fNLorth,2},{plin,f1,T\[Alpha]}]);
 fNLparamfix={\[Delta]c->1.68,p->8.52};
+
+
+(*Check dimensions compatibility to do dot product*)
+Dimensions[P13kers[0.1]]=={Dimensions[P13coefs[0.7]][[1]],
+						  Dimensions[P13interp[0.1]][[1]]}
+Dimensions[P22kers[0.1]]=={Dimensions[P22coefs[0.7]][[1]],
+						  Dimensions[P22interp[0.1]][[1]]}
 
 
 (*fNL derivatives*)
