@@ -1,6 +1,6 @@
 (* ::Package:: *)
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Preliminaries*)
 
 
@@ -11,25 +11,53 @@ None,CreateDirectory[dirname] (*create dir*),
 Directory,Print["Directory already exists."] (*do nothing*),
 File,Print["File with same name already exists!!"] (*error!*)]];
 
+(*Checks if folder exists, and if not, creates it*)
+CheckRootDir[dirname_String]:=Switch[FileType[dirname],
+None,CreateDirectory[dirname] (*create dir*),
+Directory,Print["Directory already exists."] (*do nothing*),
+File,Print["File with same name already exists!!"] (*error!*)];
+
+
 (*paths*)
 ctabpath="../GitHub/python-integer-power-project/3. Ctabs/";
 LoopTablesPath="tabs/";
 CovsPath="covsks/";
 AuxPath="aux_vars/";
-saveLoopCoefsPath = "saveloops/";
+saveLoopCoefsPath = "D:/saveloops/";
+
+
 
 CheckDir[ctabpath]
 CheckDir[LoopTablesPath]
 CheckDir[AuxPath]
-CheckDir[saveLoopCoefsPath]
+(*CheckDir[saveLoopCoefsPath]
 CheckDir[saveLoopCoefsPath<>"B222/"]
 CheckDir[saveLoopCoefsPath<>"B3211/"]
 CheckDir[saveLoopCoefsPath<>"B3212/"]
-CheckDir[saveLoopCoefsPath<>"B411/"]
+CheckDir[saveLoopCoefsPath<>"B411/"]*)
+CheckRootDir[saveLoopCoefsPath]
+CheckRootDir[saveLoopCoefsPath<>"B222/"]
+CheckRootDir[saveLoopCoefsPath<>"B3211/"]
+CheckRootDir[saveLoopCoefsPath<>"B3212/"]
+CheckRootDir[saveLoopCoefsPath<>"B411/"]
 
 baseTriEff=Round[Import[CovsPath<>"baseTrikeff.mtx"][[All,1;;3]],0.00001];
 CMASStriEff=Round[Import[CovsPath<>"TriCMASSkeff.mtx"],0.00001];
 LOWZtriEff=Round[Import[CovsPath<>"TriLOWZkeff.mtx"],0.00001];
+
+Export[ctabpath<>"base_tri_eff.csv",baseTriEff,"CSV"]
+
+
+(*Formating jmat imports*)
+fi[k_] := Round[k, N[10^-5]]; 
+Tfi[k_] := ToString[fi[k]];
+
+(*writes output file name*)
+saveLoopCoefPath[triangle_,diagram_String]:=(saveLoopCoefsPath <> diagram <>"/"
+<>Tfi[triangle[[1]]]<>"_"<>Tfi[triangle[[2]]]<>"_"<>Tfi[triangle[[3]]]<>"_.m");
+
+
+saveLoopCoefPath[{0.1,0.2,0.3},"B222"]
 
 
 (* ::Section::Closed:: *)
@@ -1376,14 +1404,6 @@ Export[AuxPath<>"mu0solk1_vec_upto2.m",{1,\[Mu]0sol1,\[Mu]0sol2}]
 (*Loops*)
 
 
-(*Formating jmat imports*)
-fi[k_] := Round[k, N[10^-5]]; 
-Tfi[k_] := ToString[fi[k]];
-
-saveLoopCoefPath[triangle_,diagram_String]:=(saveLoopCoefsPath <> diagram <>"/"
-<>Tfi[triangle[[1]]]<>"_"<>Tfi[triangle[[2]]]<>"_"<>Tfi[triangle[[3]]]<>"_.m");
-
-
 (* ::Subsection::Closed:: *)
 (*Useful rules to efficiently integrate the \[Mu]0 *)
 
@@ -1443,7 +1463,7 @@ Bpermcheck==Bcheck//Simplify
 Export[LoopTablesPath<>"BtreePerms.m",BtreePerms]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*B222*)
 
 
@@ -1687,7 +1707,6 @@ b222part1ctabdec = Import[AuxPath<>"b222mu0to4ctabdec.m"];
 
 
 (* ::Input:: *)
-(**)
 (*ctabexample=b222ctabdec[0.11,0.12,0.13];*)
 (*b222exps=ctabexample[[All,1;;3]]*)
 
@@ -1716,13 +1735,6 @@ Export[LoopTablesPath<>"B222simpcoefslist.m",b222biaslist]
 
 
 (* ::Input:: *)
-(*(**)
-(*Monitor[Do[genb222coef@@fisherPoints\[LeftDoubleBracket]i\[RightDoubleBracket],*)
-(*{i,1,Length[fisherPoints]}]//AbsoluteTiming,i];*)
-(**)*)
-
-
-(* ::Input:: *)
 (*Monitor[Do[genb222coef@@CMASStriEff[[i]],*)
 (*{i,1,Length[CMASStriEff]}]//AbsoluteTiming,i];*)
 
@@ -1740,7 +1752,7 @@ Monitor[Do[genb222coef@@baseTriEff[[i]],
 (*B321 I*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Create ctab*)
 
 
@@ -1794,9 +1806,9 @@ Monitor[Do[genb222coef@@baseTriEff[[i]],
 (*ker3211\[Mu]0list=CoefficientList[ker3211exp,\[Mu]0];*)
 
 
-(* ::Input:: *)
+\[Mu]0sol3211 = Import[AuxPath<>"mu0sol_nonsym_upto4.m"];
 (*\[Mu]0sol3211=<<(LoopTablesPath<>"mu0sol_nonsym_upto4.m");*)
-(*\[Mu]0sol3211exp=\[Mu]0sol3211//Expand;*)
+\[Mu]0sol3211exp=\[Mu]0sol3211//Expand;
 
 
 (* ::Input:: *)
@@ -1834,7 +1846,7 @@ FreeQ[b3211ctab,k1mq]
 Export[AuxPath<>"b3211ctabsimp.m",b3211ctabsimp]
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Decompose into a basis of bias coefficients and do permutations*)
 
 
@@ -1856,6 +1868,10 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 (*(*b3211biaslist>>"tables_for_B1loop/B3211biaslist.mx";*)*)
 
 
+(*b3211biaslist>>"tables_for_B1loop/B3211biaslist.mx";*)
+Export[LoopTablesPath<>"B3211simpcoefslist.m",b3211biaslist]
+
+
 (* ::Input:: *)
 (*(*Function that obtains the coefficient of each term in biaslist in each ctab coefficient "coef" *)*)
 (*b3211biaslister=biaslisterfn[b3211vars,b3211biaslist];*)
@@ -1872,14 +1888,11 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 (*b3211ctabdec=MapThread[Append,{b3211exps,b3211biascoef}];*)
 
 
-(* ::Input:: *)
-(*(**)
 (*b3211ctabdec>>(LoopTablesPath<>"b3211ctabdec.mx");*)
-(**)*)
+Export[AuxPath<>"b3211ctabdec.m",b3211ctabdec]
 
 
-(* ::Input:: *)
-(*(*b3211ctabdec=<<"tables_for_B1loop/b3211ctabdec.mx";*)*)
+(*b3211ctabdec=Import[AuxPath<>"b3211ctabdec.m"]*)
 
 
 (* ::Text:: *)
@@ -1897,13 +1910,7 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 (* ::Input:: *)
 (*(*get list of permuted biases*)*)
 (*b3211biasperm=b3211biaslist/.permreps/.Thread[arrt->arr]//Transpose;*)
-
-
-(* ::Input:: *)
 (*b3211coefsdec=b3211ctabdec[[All,4]];*)
-
-
-(* ::Input:: *)
 (*(*Get list of permuted coefficients - 13s*)*)
 (*b3211permdectemp=b3211coefsdec/.permreps/.Thread[arrt->arr];//AbsoluteTiming*)
 
@@ -1913,12 +1920,13 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 (*b3211permdec=Transpose[b3211permdectemp,{3,1,2}];*)
 
 
-(* ::Input:: *)
-(*b3211biasperm>>(LoopTablesPath<>"B3211biasPerm.mx");*)
+Export[LoopTablesPath<>"B3211simpcoefslist.m",b3211biasperm]
+Export[LoopTablesPath<>"B3211simppermks.m",b3211permdec]
 
 
 (* ::Input:: *)
-(*b3211permdec>>(LoopTablesPath<>"B3211coefsPerm.mx");*)
+(*(*b3211biasperm>>(LoopTablesPath<>"B3211biasPerm.mx");*)*)
+(*(*b3211permdec>>(LoopTablesPath<>"B3211coefsPerm.mx");*)*)
 
 
 (* ::Subsubsection::Closed:: *)
@@ -1934,20 +1942,24 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 (*Generate ctab coefs for fisherPoints*)
 
 
-(* ::Input:: *)
 (*b3211permdec=<<(LoopTablesPath<>"B3211coefsPerm.mx");*)
+b3211permdec=Import[LoopTablesPath<>"B3211simppermks.m"];
+
+
+(* ::Input:: *)
 (*b3211permdecfn[k1_,k2_,k3_]=b3211permdec;*)
 
 
 (* ::Input:: *)
 (*(*Export ctab*)*)
 (*(*Export[ctabpath<>"B3211ctab.csv",b3211exps];*)*)
+(*(*Export[LoopTablesPath<>"B3211ctab.csv",b3211exps];*)*)
 
 
 (* ::Input:: *)
-(*genb3211coef[k1sub_,k2sub_,k3sub_]:=Module[{temp},*)
-(*temp=b3211permdecfn[k1sub,k2sub,k3sub];*)
-(*Export[LoopTablesPath<>"B3211coefs/B3211coefs_"<>ToString[k1sub//N]<>"_"<>ToString[k2sub//N]<>"_"<>ToString[k3sub//N]<>"_.mx",temp]*)
+(*genb3211coef[k1sub_,k2sub_,k3sub_]:=Module[{filepath},*)
+(*filepath=saveLoopCoefPath[{k1sub,k2sub,k3sub},"B3211"];*)
+(*If[Not[FileExistsQ[filepath]],Export[filepath,b3211permdecfn[k1sub,k2sub,k3sub]]]*)
 (*];*)
 
 
@@ -1962,8 +1974,8 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 
 
 (* ::Input:: *)
-(*Monitor[Do[genb3211coef@@fisherPoints[[j]],*)
-(*{j,1,Length[fisherPoints]}],j]*)
+(*Monitor[Do[genb3211coef@@baseTriEff[[j]],*)
+(*{j,1,Length[baseTriEff]}],j]*)
 
 
 (* ::Subsection:: *)
@@ -2035,8 +2047,8 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 (*Substitute the \[Mu]0^n transformations we computed before and obtain ctab*)
 
 
-(* ::Input:: *)
 (*\[Mu]0sol3212=<<(LoopTablesPath<>"mu0solk1_vec_upto2.m");*)
+\[Mu]0sol3212=Import[AuxPath<>"mu0solk1_vec_upto2.m"];
 
 
 (* ::Input:: *)
@@ -2052,8 +2064,8 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 (*b3212ctabsimp=Sort[compressor[b3212ctab/.{\[Nu]->0}//Expand]];*)
 
 
-(* ::Input:: *)
 (*b3212ctabsimp>>(LoopTablesPath<>"b3212ctabsimp.mx");*)
+Export[AuxPath<>"b3212ctabsimp.m",b3212ctabsimp]
 
 
 (* ::Subsubsection::Closed:: *)
@@ -2062,6 +2074,9 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 
 (* ::Input:: *)
 (*(*b3212ctabsimp=<<(LoopTablesPath<>"b3212ctabsimp.mx");*)*)
+
+
+b3212ctabsimp=Import[AuxPath<>"b3212ctabsimp.m"];
 
 
 (* ::Input:: *)
@@ -2086,10 +2101,12 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 
 (* ::Input:: *)
 (*(*apply decomposition in biases to all ctab coefficients and simplify - this takes 10s *)*)
-(**)
 (*b3212biascoef=Simplify[b3212biaslister/@b3212coefs];*)
 (*b3212ctabdec=MapThread[Append,{b3212exps,b3212biascoef}];*)
+
+
 (*b3212ctabdec>>(LoopTablesPath<>"b3212ctabdec.mx");*)
+Export[AuxPath<>"b3212ctabdec.m",b3212ctabdec]
 
 
 (* ::Text:: *)
@@ -2100,6 +2117,9 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 (*(*b3212ctabdec=<<"tables_for_B1loop/b3212ctabdec.mx";*)*)
 
 
+b3212ctabdec=Import[AuxPath<>"b3212ctabdec.m"]
+
+
 (* ::Input:: *)
 (*(*The following code does the permutation*)*)
 (*arr  = {k1,\[Mu]1,k2,\[Mu]2,k3,\[Mu]3};*)
@@ -2107,10 +2127,6 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 (*pt = Permutations[{{k1t,\[Mu]1t},{k2t,\[Mu]2t},{k3t,\[Mu]3t}}]/.{{a_,b_},{c_,d_},{e_,f_}}-> {a,b,c,d,e,f};*)
 (**)
 (*permreps=Thread[(arr->#)]&/@pt;*)
-
-
-(* ::Input:: *)
-(*permreps*)
 
 
 (* ::Input:: *)
@@ -2131,6 +2147,12 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 (*b3212permdec>>(LoopTablesPath<>"B3212coefsPerm.mx");*)
 
 
+(*b3212biasperm>>(LoopTablesPath<>"B3212biasPerm.mx");
+b3212permdec>>(LoopTablesPath<>"B3212coefsPerm.mx");*)
+Export[LoopTablesPath<>"B3212simpcoefslist.m",b3212biasperm]
+Export[LoopTablesPath<>"B3212simppermks.m",b3212permdec]
+
+
 (* ::Subsubsection::Closed:: *)
 (*Ctab Exponents*)
 
@@ -2144,47 +2166,49 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 (*b3212exps={{-2,1,0},{-1,0,0},{-1,1,0},{0,-1,0},{0,0,0},{0,1,0},{1,-2,0},{1,-1,0},{1,0,0},{1,1,0},{2,-2,0},{2,-1,0},{2,0,0},{2,1,0}};*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Generate ctab coefs for fisherPoints*)
 
 
 (* ::Input:: *)
-(*b3212permdec=<<(LoopTablesPath<>"B3212coefsPerm.mx");*)
+(*(*b3212permdec=<<(LoopTablesPath<>"B3212coefsPerm.mx");*)*)
+(*b3212permdec=Import[LoopTablesPath<>"B3212simppermks.m"];*)
 (*b3212permdecfn[k1_,k2_,k3_]=b3212permdec;*)
 
 
 (* ::Input:: *)
 (*(*Export ctab exponents*)*)
-(*Export["GitHub/python-integer-power-project/3. Ctabs/B3212ctab.csv",b3212exps];*)
+(*Export[ctabpath<>"B3212ctab.csv",b3212exps];*)
+(*Export[LoopTablesPath<>"B3212ctab.csv",b3212exps];*)
 
 
 (* ::Input:: *)
-(*genb3212coef[k1sub_,k2sub_,k3sub_]:=Module[{temp},*)
-(*temp=b3212permdecfn[k1sub,k2sub,k3sub];*)
-(*Export[LoopTablesPath<>"B3212coefs/B3212coefs_"<>ToString[k1sub//N]<>"_"<>ToString[k2sub//N]<>"_"<>ToString[k3sub//N]<>"_.mx",temp]*)
+(*genb3212coef[k1sub_,k2sub_,k3sub_]:=Module[{filepath},*)
+(*filepath=saveLoopCoefPath[{k1sub,k2sub,k3sub},"B3212"];*)
+(*If[Not[FileExistsQ[filepath]],Export[filepath,b3212permdecfn[k1sub,k2sub,k3sub]]]*)
 (*];*)
 
 
 (* ::Input:: *)
 (*Monitor[Do[genb3212coef@@CMASStriEff[[i]],*)
-(*{i,1,Length[fisherPoints]}],i]*)
+(*{i,1,Length[CMASStriEff]}],i]*)
 
 
 (* ::Input:: *)
 (*Monitor[Do[genb3212coef@@LOWZtriEff[[i]],*)
-(*{i,1,Length[fisherPoints]}],i]*)
+(*{i,1,Length[LOWZtriEff]}],i]*)
 
 
 (* ::Input:: *)
-(*Monitor[Do[genb3212coef@@fisherPoints[[i]],*)
-(*{i,1,Length[fisherPoints]}],i]*)
+(*Monitor[Do[genb3212coef@@baseTriEff[[i]],*)
+(*{i,1,Length[baseTriEff]}],i]*)
 
 
 (* ::Subsection:: *)
 (*B411*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*General case*)
 
 
@@ -2206,27 +2230,6 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 
 (* ::Input:: *)
 (*ker411temp= B411Integrand[k1,k2,q]/.{Plin[q]-> q^\[Nu],Plin[k1]-> 1,Plin[k2]-> 1}//Expand;(*this takes some time*)*)
-
-
-(* ::Text:: *)
-(*Short interruption to generate the monopole kernel for matter in redshift space*)
-
-
-(* ::Input:: *)
-(*ker411Matter=ker411temp/.{\[Nu]->0}/.submat//Expand;*)
-
-
-(* ::Input:: *)
-(*\[Mu]list=getMonomialsSingle[{\[Mu]0,\[Mu]1,\[Mu]2},ker411Matter];*)
-
-
-(* ::Input:: *)
-(*ker411MatterMono=GetMonopolenoSimp[ker411Matter,\[Mu]list];*)
-
-
-(* ::Input:: *)
-(*SetDirectory[NotebookDirectory[]];*)
-(*Export["ker411MatterMono.m",ker411MatterMono]*)
 
 
 (* ::Text:: *)
@@ -2274,8 +2277,11 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 (*Substitute the \[Mu]0^n transformations we computed before*)
 
 
-(* ::Input:: *)
 (*\[Mu]0sol411=<<(LoopTablesPath<>"mu0sol_nonsym_upto4.m");*)
+\[Mu]0sol411=Import[AuxPath<>"mu0sol_nonsym_upto4.m"];
+
+
+(* ::Input:: *)
 (*\[Mu]0sol411exp=\[Mu]0sol411[[;;3]]//Expand;*)
 
 
@@ -2321,19 +2327,14 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 (*(*combine exponents and coefficients to generate ctab*)*)
 (*b411ctabfull=MapThread[Append,{b411expsfull,b411coefstemp}];*)
 (*b411ctabsimp=Sort[compressorB411[b411ctabfull]];*)
+
+
 (*b411ctabsimp>>(LoopTablesPath<>"b411ctabsimp.mx");*)
+Export[AuxPath<>"b411ctabsimp.m",b411ctabsimp]
 
 
 (* ::Subsubsection::Closed:: *)
 (*Get UV part and subtract from main ctab*)
-
-
-(* ::Input:: *)
-(*(*b411ctabsimp=<<(LoopTablesPath<>"b411ctabsimp.mx");*)*)
-
-
-(* ::Text:: *)
-(*Strategy is calculate the series separately for each term of k411, and then add everything together*)
 
 
 (* ::Input:: *)
@@ -2347,18 +2348,15 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 (*,i]*)
 
 
-(* ::Input:: *)
 (*serk4\[Mu]0list>>(LoopTablesPath<>"serk4\[Mu]0list.mx");*)
-(**)
-
-
-(* ::Input:: *)
-(*(*Do the same for monopole matter only*)*)
-(*Serker411MatterMono=Series[ker411MatterMono/.magrevreps,{q,\[Infinity],2},Assumptions->{k1>0,k2>0,-1<x<1,0<y<1}];*)
+Export[AuxPath<>"serk4\[Mu]0list.m",serk4\[Mu]0list]
 
 
 (* ::Input:: *)
 (*(*serk411\[Mu]0list=<<(LoopTablesPath<>"serk4\[Mu]0list.mx");*)*)
+
+
+serk4\[Mu]0list=Import[AuxPath<>"serk4\[Mu]0list.m"]
 
 
 (* ::Input:: *)
@@ -2375,8 +2373,11 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 (*Expand[SeriesCoefficient[serk4\[Mu]0list[[3]],1]/.{Sqrt[(-1+x^2) (-1+y^2)]->Sqrt[1-x^2] Sqrt[1-y^2]}]*)
 
 
-(* ::Input:: *)
 (*\[Mu]0sol4=<<(LoopTablesPath<>"mu0sol_nonsym_upto4.m");*)
+\[Mu]0sol4=Import[AuxPath<>"mu0sol_nonsym_upto4.m"];
+
+
+(* ::Input:: *)
 (*\[Mu]0sol4=\[Mu]0sol4[[;;3]]//Expand;*)
 
 
@@ -2435,12 +2436,12 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 (*ker411uvtemp= B411UVIntegrand[k1,k2,q]/.{Plin[q]-> q^\[Nu],Plin[k1]-> 1,Plin[k2]-> 1}//Expand;*)
 
 
-(* ::Input:: *)
-(* (*ker411uvtemp>>(LoopTablesPath<>"B411_uvk0.mx")*)*)
+(*ker411uvtemp>>(LoopTablesPath<>"B411_uvk0.mx")*)
+Export[AuxPath<>"B411_uvk0.m",ker411uvtemp]
 
 
-(* ::Input:: *)
-(* ker411uvtemp=<<(LoopTablesPath<>"B411_uvk0.mx");*)
+(*ker411uvtemp=<<(LoopTablesPath<>"B411_uvk0.mx");*)
+ker411uvtemp=Import[AuxPath<>"B411_uvk0.m"]
 
 
 (* ::Input:: *)
@@ -2457,8 +2458,12 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 
 
 (* ::Input:: *)
-(*(*Load b411 calculated before*)*)
+(**)
+
+
+(*Load b411 calculated before*)
 (*b411ctabsimp=<<(LoopTablesPath<>"b411ctabsimp.mx");*)
+b411ctabsimp=Import[AuxPath<>"b411ctabsimp.m"];
 
 
 (* ::Input:: *)
@@ -2470,15 +2475,11 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 (*b411ctabtot=Sort[compressorB411[b411ctabtottemp//Expand]]//Expand;*)
 
 
-(* ::Input:: *)
 (*b411ctabtot>>(LoopTablesPath<>"b411ctab_subk0.mx");*)
+Export[AuxPath<>"b411ctab_subk0.m",b411ctabtot]
 
 
-(* ::Input:: *)
-(*b411ctabtot=<<(LoopTablesPath<>"b411ctab_subk0.mx");*)
-
-
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Decompose into bias coefficients*)
 
 
@@ -2486,8 +2487,8 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 (*Now we want to decompose into a basis of bias coefficients. Note that b10 is present in b411 before uv subtracting, but not after.*)
 
 
-(* ::Input:: *)
 (*b411ctabtot=<<(LoopTablesPath<>"b411ctab_subk0.mx");*)
+b411ctabtot=Import[AuxPath<>"b411ctab_subk0.m"];
 
 
 (* ::Input:: *)
@@ -2519,16 +2520,20 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 (*b411ctabdec=MapThread[Append,{b411exps,b411biascoef}];*)
 
 
-(* ::Input:: *)
-(*(*b411ctabdec>>(LoopTablesPath<>"b411ctabdec.mx");*)*)
+(*b411ctabdec>>(LoopTablesPath<>"b411ctabdec.mx");*)
+Export[AuxPath<>"b411ctabdec.m",b411ctabdec]
 
 
 (* ::Input:: *)
-(*(*b411ctabdec=<<(LoopTablesPath<>"b411ctabdec.mx");*)*)
+(**)
 
 
 (* ::Text:: *)
 (*Now we just have to permute the coefficients over the 3 cyclic permutations of k1, k2 and k3*)
+
+
+(*b411ctabdec=<<(LoopTablesPath<>"b411ctabdec.mx");*)
+b411ctabdec=Import[AuxPath<>"b411ctabdec.m"];
 
 
 (* ::Input:: *)
@@ -2555,12 +2560,11 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 (*b411permdec=Transpose[b411permdectemp,{3,1,2}];*)
 
 
-(* ::Input:: *)
 (*b411biasperm>>(LoopTablesPath<>"B411biasPerm.mx");*)
+Export[LoopTablesPath<>"B411simpcoefslist.m",b411biasperm]
 
-
-(* ::Input:: *)
 (*b411permdec>>(LoopTablesPath<>"B411coefsPerm.mx");*)
+Export[LoopTablesPath<>"B411simppermks.m",b411permdec]
 
 
 (* ::Subsubsection::Closed:: *)
@@ -2581,18 +2585,21 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 
 
 (* ::Input:: *)
-(*b411permdec=<<(LoopTablesPath<>"B411coefsPerm.mx");*)
+(*(*b411permdec=<<(LoopTablesPath<>"B411coefsPerm.mx");*)*)
+(*b411permdec=Import[LoopTablesPath<>"B411simppermks.m"];*)
 (*b411permdecfn[k1_,k2_,k3_]=b411permdec;*)
 
 
 (* ::Input:: *)
+(*(*Export ctabs*)*)
 (*Export[ctabpath<>"B411ctab.csv",b411exps];*)
+(*Export[LoopTablesPath<>"B411ctab.csv",b411exps];*)
 
 
 (* ::Input:: *)
-(*genb411coef[k1sub_,k2sub_,k3sub_]:=Module[{temp},*)
-(*temp=b411permdecfn[k1sub,k2sub,k3sub];*)
-(*Export[LoopTablesPath<>"B411coefs/B411coefs_"<>ToString[k1sub//N]<>"_"<>ToString[k2sub//N]<>"_"<>ToString[k3sub//N]<>"_.mx",temp]*)
+(*genb411coef[k1sub_,k2sub_,k3sub_]:=Module[{filepath},*)
+(*filepath=saveLoopCoefPath[{k1sub,k2sub,k3sub},"B411"];*)
+(*If[Not[FileExistsQ[filepath]],Export[filepath,b411permdecfn[k1sub,k2sub,k3sub]]]*)
 (*];*)
 
 
@@ -2612,6 +2619,6 @@ b3211ctabsimp=Import[AuxPath<>"b3211ctabsimp.m"];
 
 (* ::Input:: *)
 (*Monitor[*)
-(*Do[genb411coef@@fisherPoints[[j]],*)
-(*{j,1,Length[fisherPoints]}]*)
+(*Do[genb411coef@@baseTriEff[[j]],*)
+(*{j,1,Length[baseTriEff]}]*)
 (*,j]*)
