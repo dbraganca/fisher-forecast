@@ -16,7 +16,7 @@ import pickle
 
 kk = np.logspace(-5, 0, 200)
 #the formula for omega_cdm is such that we change Omegam by dOm
-def cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,dlnAs=0,dns=0,dh=0,dOm=0,dob=0,dmnu=0):
+"""def cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,dlnAs=0,dns=0,dh=0,dOm=0,dob=0,dmnu=0):
     return {'omega_b': obback*(1+dob),
           'omega_cdm':Omback*(1+dOm)*hback**2-obback*(1+dob)-mnuback*(1+dmnu)/93.14+2*Omback*hback**2*dh,
           'h': hback*(1+dh),
@@ -29,6 +29,22 @@ def cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,dlnAs=0,dns=0,dh=
           'N_ur': 2.0328,
           'm_ncdm':mnuback*(1+dmnu),#0.15#0.06
           'T_ncdm': 0.71611
+         }"""
+
+def cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,dlnAs=0,dns=0,dh=0,dOm=0,dob=0,dmnu=0,dOk=0):
+    return {'omega_b': obback*(1+dob),
+          'omega_cdm':Omback*(1+dOm)*hback**2-obback*(1+dob)-mnuback*(1+dmnu)/93.14+2*Omback*hback**2*dh,
+          'h': hback*(1+dh),
+          'ln10^{10}A_s': lnAsback+dlnAs,
+          'n_s': nsback*(1+dns),
+          'output': 'mPk,mTk',
+          'P_k_max_h/Mpc': 1,
+          'z_pk': zpk,
+          'N_ncdm':1,
+          'N_ur': 2.0328,
+          'm_ncdm':mnuback*(1+dmnu),#0.15#0.06
+          'T_ncdm': 0.71611,
+          'Omega_k':Okback+dOk
          }
 
 def getD(dic):
@@ -73,7 +89,7 @@ def getT(dic):
     M.compute()
     zpk = dic['z_pk']
 
-    Dg = M.scale_independent_growth_factor(zpk)/((1+11.2)*M.scale_independent_growth_factor(11.2))
+    Dg = M.scale_independent_growth_factor(zpk)/((1+100)*M.scale_independent_growth_factor(100))
     Possionpre =  (3.e5)**2/(1.5*100.**2*M.Omega0_m())
 
     
@@ -83,44 +99,48 @@ def getT(dic):
     return kpsi,Tpsi*kpsi**2*Possionpre*Dg
 
 
-def getalldics(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,dlnAs=0.1,dns=0.02,dh=0.02,dOm=0.04,dob=0.02,dmnu=0.25):
-    back = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,0,0,0,0,0,0)
-    Asp = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,dlnAs,0,0,0,0,0)
-    Asl = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,-dlnAs,0,0,0,0,0)
-    nsp = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,0,dns,0,0,0,0)
-    nsl = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,0,-dns,0,0,0,0)
-    hp = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,0,0,dh,0,0,0)
-    hl = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,0,0,-dh,0,0,0)
-    Omp = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,0,0,0,dOm,0,0)
-    Oml = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,0,0,0,-dOm,0,0)
-    obp = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,0,0,0,0,dob,0)
-    obl = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,0,0,0,0,-dob,0)
-    nup = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,0,0,0,0,0,dmnu)
-    nul = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,0,0,0,0,0,-dmnu)
-    allp =  np.array([back,Asp,Asl,nsp,nsl,hp,hl,Omp,Oml,obp,obl,nup,nul])
+def getalldics(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,dlnAs=0.1,dns=0.02,dh=0.02,dOm=0.04,dob=0.02,dmnu=0.25,dOk=0.002):
+    back = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,0,0,0,0,0,0,0)
+    Asp = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,dlnAs,0,0,0,0,0,0)
+    Asl = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,-dlnAs,0,0,0,0,0,0)
+    nsp = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,0,dns,0,0,0,0,0)
+    nsl = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,0,-dns,0,0,0,0,0)
+    hp = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,0,0,dh,0,0,0,0)
+    hl = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,0,0,-dh,0,0,0,0)
+    Omp = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,0,0,0,dOm,0,0,0)
+    Oml = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,0,0,0,-dOm,0,0,0)
+    obp = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,0,0,0,0,dob,0,0)
+    obl = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,0,0,0,0,-dob,0,0)
+    nup = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,0,0,0,0,0,dmnu,0)
+    nul = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,0,0,0,0,0,-dmnu,0)
+    Okp = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,0,0,0,0,0,0,dOk)
+    Okl = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,0,0,0,0,0,0,-dOk)
+    allp =  np.array([back,Asp,Asl,nsp,nsl,hp,hl,Omp,Oml,obp,obl,nup,nul,Okp,Okl])
     return allp
 
 
-def getalldicsforf(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,dlnAs=0.1,dns=0.02,dh=0.02,dOm=0.04,dob=0.02,dmnu=0.25):
-    back = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,0,0,0,0,0,0)
-    Omp = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,0,0,0,dOm,0,0)
-    Oml = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,0,0,0,-dOm,0,0)
-    obp = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,0,0,0,0,dob,0)
-    obl = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,0,0,0,0,-dob,0)
-    hp = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,0,0,dh,0,0,0)
-    hl = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,0,0,-dh,0,0,0)
-    nup = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,0,0,0,0,0,dmnu)
-    nul = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,0,0,0,0,0,-dmnu)
-    allp =  np.array([back,Omp,Oml,obp,obl,hp,hl,nup,nul])
+def getalldicsforf(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,dlnAs=0.1,dns=0.02,dh=0.02,dOm=0.04,dob=0.02,dmnu=0.25,dOk=0.002):
+    back = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,0,0,0,0,0,0,0)
+    hp = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,0,0,dh,0,0,0,0)
+    hl = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,0,0,-dh,0,0,0,0)
+    Omp = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,0,0,0,dOm,0,0,0)
+    Oml = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,0,0,0,-dOm,0,0,0)
+    obp = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,0,0,0,0,dob,0,0)
+    obl = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,0,0,0,0,-dob,0,0)
+    nup = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,0,0,0,0,0,dmnu,0)
+    nul = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,0,0,0,0,0,-dmnu,0)
+    Okp = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,0,0,0,0,0,0,dOk)
+    Okl = cosmicdicn(zpk,lnAsback,nsback,hback,Omback,obback,mnuback,Okback,0,0,0,0,0,0,-dOk)
+    allp =  np.array([back,Omp,Oml,obp,obl,hp,hl,nup,nul,Okp,Okl])
     return allp
 
 
 def getallpks(dics):
-	allp=[]
-	allp.append(kk)
-	for i in range(len(dics)):
-		allp.append(getpk(dics[i]))
-	return np.array(allp)
+    allp=[]
+    allp.append(kk)
+    for i in range(len(dics)):
+        allp.append(getpk(dics[i]))
+    return np.array(allp)
 
 def getallTs(dics):
     allT=[]
@@ -131,23 +151,24 @@ def getallTs(dics):
     return np.array(allT)
 
 def getallfs(dics):
-	allf=[]
-	for i in range(len(dics)):
-		allf.append(getf(dics[i]))
-	return np.array(allf)
+    allf=[]
+    for i in range(len(dics)):
+        allf.append(getf(dics[i]))
+    return np.array(allf)
 
-names = np.array(['fid','lnAs_pl','lnAs_min','ns_pl','ns_min','h_pl','h_min','Om_pl','Om_min','ob_pl','ob_min','nu_pl','nu_min'])
+names = np.array(['fid','lnAs_pl','lnAs_min','ns_pl','ns_min','h_pl','h_min','Om_pl','Om_min','ob_pl','ob_min','nu_pl','nu_min','Ok_pl','Ok_min'])
 
 def savepk(pks,folder):
-	os.mkdir(folder)
-	for i in range(len(pks)-1):
-	    np.savetxt(os.path.join(folder, 'pk_'+names[i] + '.dat'), np.transpose(np.array([pks[0],pks[i+1]])))
+    os.mkdir(folder)
+    for i in range(len(pks)-1):
+        np.savetxt(os.path.join(folder, 'pk_'+names[i] + '.dat'), np.transpose(np.array([pks[0],pks[i+1]])))
 
 def savepkandf(pks,fs,folder):
-	os.mkdir(folder)
-	for i in range(len(pks)-1):
-	    np.savetxt(os.path.join(folder, 'pk_'+names[i] + '.dat'), np.transpose(np.array([pks[0],pks[i+1]])))
-	np.savetxt(os.path.join(folder, 'allfs.dat'),fs)
+    os.mkdir(folder)
+    for i in range(len(pks)-1):
+        np.savetxt(os.path.join(folder, 'pk_'+names[i] + '.dat'), np.transpose(np.array([pks[0],pks[i+1]])))
+    np.savetxt(os.path.join(folder, 'allfs.dat'),fs)
+
 
 def savepkandfandT(pks,Ts,fs,folder):
     os.mkdir(folder)
@@ -157,9 +178,9 @@ def savepkandfandT(pks,Ts,fs,folder):
     np.savetxt(os.path.join(folder, 'allfs.dat'),fs)
 
 def allsaved(dics,dicsf,folder):
-	fs = getallfs(dicsf)
-	pks = getallpks(dics)
-	savepkandf(pks,fs,folder)
+    fs = getallfs(dicsf)
+    pks = getallpks(dics)
+    savepkandf(pks,fs,folder)
 
 def allsavedT(dics,dicsf,folder):
     fs = getallfs(dicsf)

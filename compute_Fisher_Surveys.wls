@@ -216,8 +216,13 @@ TriLOWZkeff = Import["covsks/TriLOWZkeff.mtx"];
 
 
 (*export triangles to calculate jmats*)
+<<<<<<< HEAD
 (*TriBOSSkeff = Sort[Join[TriCMASSkeff,TriLOWZkeff]];
 Export[ctabpath<>"BOSS_tri_eff.csv",TriBOSSkeff]*)
+=======
+TriBOSSkeff = Sort[Join[TriCMASSkeff,TriLOWZkeff]];
+Export[ctabpath<>"BOSS_tri_eff.csv",TriBOSSkeff]
+>>>>>>> a99df1e5a3f5e3279fd68b74f4ee4637fd9ca34b
 
 
 
@@ -247,6 +252,7 @@ Monitor[Do[
 	{j,1,Length[TriLOWZkeff]}],
 	j];//AbsoluteTiming
 (*{400.0957859`,Null}*)
+
 
 
 Dimensions[BderivsCMASS]=={150,53,49}
