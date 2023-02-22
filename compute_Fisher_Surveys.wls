@@ -23,13 +23,15 @@ Tfi[0.56723569] == "0.56724"
 (*BOSS numbers fully binned*)
 
 
-(*z,nb,V,N,Dg,fs*)
+(*z,nb,V,N,Dg,fs,b1*)
 BOSSspec = {{0.05`,0.15`,0.25`,0.35`,0.45`,0.55`,0.65`,0.75`},
 			{0.000289`,0.00029`,0.0003`,0.000304`,0.00027600000000000004`,0.000323`,0.00012`,0.00001`},
 			{2.55`*^7,1.64`*^8,4.02`*^8,7.04`*^8,1.04`*^9,1.38`*^9,1.72`*^9,2.04`*^9},
 			{7369.499999999999`,47560.`,120599.99999999999`,214016.`,287040.00000000006`,445740.`,206400.`,20400.`},
-			{0.974195497032948,0.9242943699666863,0.8770024987292571,0.8325495671618781,0.7910134230680845,0.7523626109979884,0.7164923688240663,0.6832529172629023},
-			{0.5505691478621921,0.605295980688119,0.6541675497977562,0.697208424265646,0.7347223934446799,0.7671789591953987,0.7951240646380944,0.8191175994924873}};
+			{0.973938713655033,0.9235978369817912,0.8759572952224975,0.8312353500171761,0.789497353926307,0.7506997404081879,0.7147268398976079,0.6814195172840236},
+			{0.5559799005938011,0.6106395138125067,0.6593260133608193,0.7021004757219186,0.7392994196584667,0.7714187036372595,0.799023714461632,0.8226875527129273},
+			{1.4798689114411347`,1.560529449372745`,1.6454017014847226`,1.7339272493130506`,1.8255939894151774`,1.9199442152509005`,2.0165768843849974`,2.115145791144549`}};
+			
 BOSScut=5;
 
 (*more tests*)
@@ -44,8 +46,13 @@ Dg57=0.7449704148232558;
 Dg32 =0.8455802559185244;
 
 
-CMASSpk = PlinsubsT["plins/CMASSpksN/",0.57];
-LOWZpk = PlinsubsT["plins/LOWZpksN/",0.32];
+(*CMASSpk = PlinsubsT["plins/CMASSpksNk/",0.57];
+LOWZpk = PlinsubsT["plins/LOWZpksNk/",0.32];
+Export["aux_vars/CMASSpk.m",CMASSpk]
+Export["aux_vars/LOWZpk.m",LOWZpk]*)
+
+CMASSpk=Import["aux_vars/CMASSpk.m"];
+LOWpk=Import["aux_vars/LOWZpk.m"];
 
 
 (*BOSS numbers fully binned into 2*)
@@ -71,18 +78,19 @@ ktabCMASS = Import["covsks/ktabCMASS.m"];
 ktabLOWZ = Import["covsks/ktabLOWZ.m"];
 
 
-normbias
-
-
 (*Binning sizes*)
 dkP = dk->0.01;
 dkBCMASS=dk->0.02154;
 dkBLOWZ=dk->0.02459;
 
 
+(* ::Subsubsection:: *)
+(*Covariance*)
+
+
 (*Analytical Covariance with Full redshift*)
-COVCMASSP=GetFullzCovP[ktabCMASS,CMASSpk,CMASSspec,Dg57,bfixBOSS,dkP];
-COVLOWZP=GetFullzCovP[ktabLOWZ,LOWZpk,LOWZspec,Dg32,bfixBOSS,dkP];
+COVCMASSP=GetFullzCovP[ktabCMASS,CMASSpk,CMASSspec,bfixBOSS,dkP];
+COVLOWZP=GetFullzCovP[ktabLOWZ,LOWZpk,LOWZspec,bfixBOSS,dkP];
 
 
 (*check*)
@@ -93,8 +101,8 @@ Dimensions[COVLOWZP]== {21}
 
 
 (*Analytical Covariance with Full redshift - no shot noise*)
-COVCMASSPNS=GetFullzCovPNS[ktabCMASS,CMASSpk,CMASSspec,Dg57,bfixBOSSNS,dkP];
-COVLOWZPNS=GetFullzCovPNS[ktabLOWZ,LOWZpk,LOWZspec,Dg32,bfixBOSSNS,dkP];
+COVCMASSPNS=GetFullzCovP[ktabCMASS,CMASSpk,CMASSspec,bfixBOSSNS,dkP];
+COVLOWZPNS=GetFullzCovP[ktabLOWZ,LOWZpk,LOWZspec,bfixBOSSNS,dkP];
 
 
 (*check*)
@@ -104,11 +112,35 @@ Dimensions[COVCMASSPNS]== {21}
 Dimensions[COVLOWZPNS]== {21}
 
 
+(* ::Subsubsection:: *)
+(*Derivatives*)
+
+
 (* Power-spectrum derivatives *)
-PCMASSngcderivs = Monitor[Table[P1LoopDerivs[ktabCMASS[[i]],CMASSpk],{i,1,Length[ktabCMASS]}]/.coeffixBOSS/.nbfixCMASSngc,i];
-PCMASSsgcderivs = Monitor[Table[P1LoopDerivs[ktabCMASS[[i]],CMASSpk],{i,1,Length[ktabCMASS]}]/.coeffixBOSS/.nbfixCMASSsgc,i];
-PLOWZngcderivs =Monitor[ Table[P1LoopDerivs[ktabLOWZ[[i]],LOWZpk],{i,1,Length[ktabLOWZ]}]/.coeffixBOSS/.nbfixLOWZngc,i];
-PLOWZsgcderivs =Monitor[ Table[P1LoopDerivs[ktabLOWZ[[i]],LOWZpk],{i,1,Length[ktabLOWZ]}]/.coeffixBOSS/.nbfixLOWZsgc,i];
+(*CMASS*)
+(*PCMASSderivs = Monitor[Table[P1LoopDerivs[ktabCMASS[[i]],CMASSpk],{i,1,Length[ktabCMASS]}]/.coeffixBOSS,i];
+PCMASSngcderivs = PCMASSderivs/.nbfixCMASSngc;
+PCMASSsgcderivs = PCMASSderivs/.nbfixCMASSsgc;*)
+(*LOWZ*)
+(*PLOWZderivs = Monitor[Table[P1LoopDerivs[ktabLOWZ[[i]],LOWZpk],{i,1,Length[ktabLOWZ]}]/.coeffixBOSS,i];
+PLOWZngcderivs =PLOWZderivs/.nbfixLOWZngc;
+PLOWZsgcderivs =PLOWZderivs/.nbfixLOWZsgc;*)
+
+(*save derivatives*)
+(*Export["aux_vars/PCMASSngcderivs.m",PCMASSngcderivs]
+Export["aux_vars/PCMASSsgcderivs.m",PCMASSsgcderivs]
+Export["aux_vars/PLOWZngcderivs.m",PLOWZngcderivs]
+Export["aux_vars/PLOWZsgcderivs.m",PLOWZsgcderivs]*)
+
+(*Import derivs*)
+PCMASSngcderivs=Import["aux_vars/PCMASSngcderivs.m"];
+PCMASSsgcderivs=Import["aux_vars/PCMASSsgcderivs.m"];
+PLOWZngcderivs=Import["aux_vars/PLOWZngcderivs.m"];
+PLOWZsgcderivs=Import["aux_vars/PLOWZsgcderivs.m"];
+
+
+(*check it only depends on \[Mu]1*)
+Variables[{PCMASSngcderivs,PCMASSsgcderivs,PLOWZngcderivs,PLOWZsgcderivs}]=={FisherFunctions`Private`\[Mu]1}
 
 
 (*Replicate full P result*)
@@ -132,13 +164,17 @@ LOWZNGCFisherFullP =(2048 - Length[covPLOWZngc] - 2)/(2048 - 1) (PLOWZngcderivsm
 LOWZSGCFisherFullP =(2048 - Length[covPLOWZsgc] - 2)/(2048 - 1) (PLOWZsgcderivsmonoquad//Transpose).Inverse[covPLOWZsgc].PLOWZsgcderivsmonoquad//Quiet;
 
 
+(* ::Subsubsection:: *)
+(*Fisher power spectrum*)
+
+
 (*Comparisons part 2: Full redshift dependence analytical covariance*)
 (*Reduce P-derivatives to monopole and quadrupole*)
 PCMASSderivsmonoquad= removelg2[PCMASSngcderivs]//Expand;
 PLOWZderivsmonoquad = removelg2[PLOWZngcderivs]//Expand;
 (*Powerspectrum Fishers*)
-FPCnew = GetFisherPnew[PCMASSderivsmonoquad,COVCMASSP];
-FPLnew = GetFisherPnew[PLOWZderivsmonoquad,COVLOWZP];
+FPCMASS = GetFisherP[PCMASSderivsmonoquad,COVCMASSP];
+FPLOWZ = GetFisherP[PLOWZderivsmonoquad,COVLOWZP];
 (*Bispectrum Fishers*)
 (*FBCnew = GetFisherB[BderivsCMASSkeffCMASSngc,COVCMASSB,BLoopmastermono];
 FBLnew = GetFisherB[BderivsLOWZkeffLOWZngc,COVLOWZB,BLoopmastermono];*)
@@ -149,32 +185,112 @@ FBLnew = GetFisherB[BderivsLOWZkeffLOWZngc,COVLOWZB,BLoopmastermono];*)
 (*Full angular dependence (all multipoles)*)
 
 (*Powerspectrum Fishers*)
-FPCnewmu = GetFisherPnew[PCMASSngcderivs,COVCMASSP];
-FPLnewmu = GetFisherPnew[PLOWZsgcderivs,COVLOWZP];
+FPCMASSfull = GetFisherP[PCMASSngcderivs,COVCMASSP];
+FPLOWZfull = GetFisherP[PLOWZsgcderivs,COVLOWZP];
 
 (*Bispectrum Fishers*)
 (*FBCnewmu = GetFisherB[BderivsCMASSkeffCMASSngc,COVCMASSB,Loopmaster];
 FBLnewmu = GetFisherB[BderivsLOWZkeffLOWZngc,COVLOWZB,Loopmaster];*)
 
-(*Full angular dependence 2Loop w/o shot noise *)
-(*Powerspectrum Fishers*)
-FPCnewmubase = GetFisherPnew[PCMASSngcderivs,COVCMASSP];
-FPLnewmubase = GetFisherPnew[PLOWZsgcderivs,COVLOWZP];
-FPCnewmubaseNS = GetFisherPnew[PCMASSngcderivs,COVCMASSPNS];
-FPLnewmubaseNS = GetFisherPnew[PLOWZsgcderivs,COVLOWZPNS];
-(*FPCnewmu2L = GetFisherPnew[PCMASSngcderivs2L,COVCMASSP2L];
-FPLnewmu2L = GetFisherPnew[PLOWZngcderivs2L,COVLOWZP2L];
-FPCnewmu2LNS = GetFisherPnew[PCMASSngcderivs2L,COVCMASSPNS2L];
-FPLnewmu2LNS = GetFisherPnew[PLOWZngcderivs2L,COVLOWZPNS2L];*)
-
 (*no shot noise full mu*)
 (*Powerspectrum Fishers*)
-FPCnewNS = GetFisherPnew[PCMASSngcderivs,COVCMASSPNS];
-FPLnewNS = GetFisherPnew[PLOWZsgcderivs,COVLOWZPNS];
+FPCMASSNS = GetFisherP[PCMASSngcderivs,COVCMASSPNS];
+FPLOWZNS = GetFisherP[PLOWZsgcderivs,COVLOWZPNS];
 
 (*Bispectrum Fishers*)
 (*FBCnewNS = GetFisherB[BderivsCMASSkeffCMASSngc,COVCMASSBNS,Loopmaster];
 FBLnewNS = GetFisherB[BderivsLOWZkeffLOWZngc,COVLOWZBNS,Loopmaster];*)
+
+
+(*Check that no shot noise is better*)
+FPLOWZ[[1,1]]<FPLOWZNS[[1,1]]
+
+
+(* ::Subsubsection:: *)
+(*Bi-spectrum derivatives*)
+
+
+(*Bispectrum Fishers*)
+TriCMASSkeff = Import["covsks/TriCMASSkeff.mtx"];
+TriLOWZkeff = Import["covsks/TriLOWZkeff.mtx"];
+
+
+(*export triangles to calculate jmats*)
+(*TriBOSSkeff = Sort[Join[TriCMASSkeff,TriLOWZkeff]];
+Export[ctabpath<>"BOSS_tri_eff.csv",TriBOSSkeff]*)
+
+
+
+CMASStriangs=Import["covsks/CMASStriangs.mtx"];
+LOWZtriangs=Import["covsks/LOWZtriangs.mtx"];
+
+
+(* ::Text:: *)
+(*Create array of derivatives for Fisher*)
+
+
+(*Calculate derivatives, one at a time instead of table*)
+BderivsCMASS=ConstantArray[0,Length[TriCMASSkeff]];
+BderivsLOWZ=ConstantArray[0,Length[TriLOWZkeff]];
+
+
+Monitor[Do[
+			If[(BderivsCMASS[[j]]==0)||(Length[BderivsCMASS[[j]]]==0),
+				BderivsCMASS[[j]]=B1LoopDerivs[TriCMASSkeff[[j]],CMASSpk]/.Dispatch[coeffixBOSS]];,
+	{j,1,Length[TriCMASSkeff]}],j];//AbsoluteTiming
+(*{791.6264653`,Null}*)
+
+
+Monitor[Do[
+	If[BderivsLOWZ[[j]]==0,
+	BderivsLOWZ[[j]]=B1LoopDerivs[TriLOWZkeff[[j]],LOWZpk]/.Dispatch[coeffixBOSS]];,
+	{j,1,Length[TriLOWZkeff]}],
+	j];//AbsoluteTiming
+(*{400.0957859`,Null}*)
+
+
+Dimensions[BderivsCMASS]=={150,53,49}
+Dimensions[BderivsLOWZ]=={62,53,49}
+
+
+(* ::Text:: *)
+(*Do replacements for NGC and SGC*)
+
+
+BderivsCMASSbfix=BderivsCMASS/.Dispatch[coeffixBOSS];
+
+
+BderivsCMASSngc=BderivsCMASSbfix/.Dispatch[nbfixCMASSngc];
+BderivsCMASSsgc=BderivsCMASSbfix/.Dispatch[nbfixCMASSsgc];
+
+
+BderivsLOWZbfix=BderivsLOWZ/.Dispatch[coeffixBOSS];
+
+
+BderivsLOWZngc=BderivsLOWZbfix/.Dispatch[nbfixCMASSngc];
+BderivsLOWZsgc=BderivsLOWZbfix/.Dispatch[nbfixCMASSsgc];
+
+
+(* ::Subsection:: *)
+(*Get kmax for LOWZ (this is just for validation of the formulas. We use the same kmax as in the BOSS analyses)*)
+
+
+CC=1/(2\[Pi]^2) NIntegrate[k^2 CMASSpk[[1,3]][k],{k,10^-5,0.7}];
+Getknl[pk_]:=Quiet[FindRoot[1/(2\[Pi]^2) NIntegrate[k^2 pk[k],{k,10^-5,kn}]-CC,{kn,0.5}]]
+Get\[Sigma][ktab_, Cov_]:=Transpose@{ktab,1/(Cov//mono)}//Interpolation;
+\[Sigma]CMASS = Get\[Sigma][ktabCMASS, COVCMASSP];
+\[Sigma]CMASSNS = Get\[Sigma][ktabCMASS, COVCMASSPNS];
+GetkmaxP[\[Sigma]1_,pk1_]:=Quiet[FindRoot[(Sqrt[\[Sigma]1[kmm]/\[Sigma]CMASS[0.22]])-(pk1[[1,3]][0.5]/CMASSpk[[1,3]][0.5])^2 pk1[[1,3]][kmm]/CMASSpk[[1,3]][0.22] (kmm/0.22)^2.4`,{kmm,0.1}]]
+GetkmaxNSP[\[Sigma]1_,pk1_]:=Quiet[FindRoot[Sqrt[\[Sigma]1[kmm]/\[Sigma]CMASSNS[0.22]]-(pk1[[1,3]][0.5]/CMASSpk[[1,3]][0.5])^2 pk1[[1,3]][kmm]/CMASSpk[[1,3]][0.22] (kmm/0.22)^2.4`,{kmm,0.1}]]
+GetkmaxNSP[Get\[Sigma][ktabLOWZ, COVLOWZPNS],LOWZpk]
+{kmm->0.19391015781837476`}
+GetkmaxNSP[\[Sigma]1_,pk1_]:=Quiet[FindRoot[Sqrt[\[Sigma]1[kmm]/\[Sigma]CMASSNS[0.22]]-pk1[[1,3]][kmm]/CMASSpk[[1,3]][0.22] (kmm/Getknl[pk1[[1,3]]][[1,2]])^((3+GetSlope[0.8kmm,1.2kmm,CMASSpk[[1,3]]])2) (0.22/0.7)^(-(3+(-1.8))2),{kmm,0.1}]]
+GetkmaxNSP[Get\[Sigma][ktabLOWZ, COVLOWZPNS],LOWZpk]
+{kmm->0.18513243366801113`}
+GetkmaxNSP2L[\[Sigma]1_,pk1_]:=Quiet[FindRoot[Sqrt[\[Sigma]1[kmm]/\[Sigma]CMASSNS[0.22]]-pk1[[1,3]][kmm]/CMASSpk[[1,3]][0.22] (kmm/Getknl[pk1[[1,3]]][[1,2]])^((3+GetSlope[0.8kmm,1.2kmm,CMASSpk[[1,3]]])3) (0.22/0.7)^(-(3+(-1.8))2),{kmm,0.1}]]
+COVLOWZPgenNS=GetFullzCovP[ktabraw2,LOWZpk,LOWZspec,bfixstochBOSSNS,dkP];
+COVCMASS2PgenNS=GetFullzCovP[ktabraw2,CMASSpk,CMASSspec,bfixstochBOSSNS,dkP];
+
 
 
 (* ::Subsection:: *)
@@ -187,3 +303,6 @@ GetFExp4[Fisher_]:=SubFisher4sky[Fisher+Prior4sky,Allparams]
 Exporter[Fisher_,name_]:=Export[name,GetFExp[Fisher]]
 Exporter4[Fisher_,name_]:=Export[name,GetFExp4[Fisher]]
 
+
+
+CombineMs
