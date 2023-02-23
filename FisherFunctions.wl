@@ -25,16 +25,19 @@ mono::usage = "integrates over the angles. Equivalent to taking the monopole.";
 quad::usage = "Extracts quadrupole contribution.";
 removelg2::usage = "Extracts only the monopole and quadrupole contributions from a given quantity";
 
-BAllcoefs::usage = "lists all cosmological+EFT+fNL parameters used";
+AllParams::usage = "lists all cosmological+EFT+fNL parameters used";
+BAllcoefs::usage = "lists all EFT parameters used";
 changeb1::usage = "Change bias values based on b1 rescaling";
 Evolve::usage = "Adjust biases with new time assuming 1/D dependence";
 shift
+shiftBiasFix::usage = "shift biases for different new b1 assuming same relation of non-stochastic biases to b1";
 shiftBiasFixb1Tab::usage = "shift biases for different new b1 assuming same relation of non-stochastic biases to b1";
 normbias;
 
 fnlfix;
 paramfix;
 
+makeTri;
 
 
 stochp;
@@ -100,7 +103,7 @@ Begin["`Private`"]
 (*Setup*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Preliminaries: paths and imports*)
 
 
@@ -111,7 +114,7 @@ saveLoopCoefsPath = "D:\\saveloops\\";
 covsPath = "covsks/";
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Background cosmology and shifts (including fNL)*)
 
 
@@ -155,6 +158,7 @@ numCosmoFnlParams = Length[cosmoparams]+Length[fnlcoefs];
 (* k-scales *)
 kr=knl/2.8`;
 km=knl;
+kM=knl;
 
 
 (* Nmax log k bins, form kmin to kmax *)
@@ -181,7 +185,7 @@ Module[{nshigh,Ashigh,pextrahigh,kmax=1000},
 
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*EFT-parameters and related functions*)
 
 
@@ -217,7 +221,9 @@ Evolve[Dgold_,Dgnew_,biasfix_]:=Join[Thread[nonstoch->(nonstoch/.biasfix) Dgold/
 (* Adjust biases with new b1 for new redshift*)
 shiftBiasFixb1[b1old_,b1new_,biasfixold_]:=Join[Thread[nonstoch->(nonstoch/.biasfixold) b1new/b1old],
 											    Thread[stochp->(stochp/.biasfixold)]];
-											    
+
+shiftBiasFix[b1new_,biasfixold_]:=shiftBiasFixb1[b1/.biasfixold,b1new,biasfixold];							    
+								    								    								    
 shiftBiasFixb1Tab[surveySpec_,biasfixold_]:=Module[{b1old, b1newlist},
 	b1old=b1/.biasfixold;
 	b1newlist=surveySpec[[7]];
@@ -231,7 +237,7 @@ bfixstochBOSS={Be1\[Rule]1.6922`,Be2\[Rule]0.9091`,ce2\[Rule]0.5548`,Be3\[Rule]0
 shiftBiasFixb1[b1/.bfixBOSS,3,Join[bfixBOSS,bfixstochBOSS]]*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*IR-resummation using Eisenstein-Hu*)
 
 
@@ -432,7 +438,7 @@ PlinsubsT[surveypath_, zpk_]:=Module[{Ts,Pks},
 ];
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Utility functions for evaluating tables and Fisher matrix manipulations*)
 
 
@@ -462,7 +468,7 @@ A[[keeplist,keeplist]]
 makeTri[kmin_,kmax_,dk_]:=Module[{kpairs,kpairstriangle,triangles,ktab},
 ktab = Table[k,{k,kmin,kmax,dk}];
 triangles = Select[Subsets[ktab, {3}], 
-    #[[1]] + #[[2]] > #[[3]] &];
+    (#[[1]] + #[[2]] >= #[[3]]) &];
  Sort[triangles]
 ];
 
@@ -499,15 +505,22 @@ quad[f_]:=(f-(f/.\[Mu]1->0)//Expand)/.\[Mu]1^n_.-> (5 (1+(-1)^n) n)/(2 (1+n) (3+
 Makederiv[prederiv_]:=Module[{EFTderiv, cosmoderiv, derivs, fnlderiv},
 (*prederiv is an array of the resummed power spectra for all shifted parameters,
 prederiv\[LeftDoubleBracket]1\[RightDoubleBracket] is the fiducial power spectrum*)
-EFTderiv=Table[D[prederiv[[1]],BAllcoefs[[i]]],{i,1,Length[BAllcoefs]}];
+(*EFTderiv=Table[D[prederiv[[1]],BAllcoefs[[i]]],{i,1,Length[BAllcoefs]}];*)
+(*fnlderiv=Table[D[prederiv[[1]],fnlcoefs[[i]]],{i,1,Length[fnlcoefs]}];*)
+EFTderiv = D[prederiv[[1]],{BAllcoefs}];
+fnlderiv=D[prederiv[[1]],{fnlcoefs}];
+
+(*if prederiv[[1]] is a list (of \[Mu] coefs), we have to transpose in order to match the dimensions*)
+If[Head[prederiv[[1]]]==List,
+	EFTderiv=Transpose[EFTderiv];
+	fnlderiv=Transpose[fnlderiv]];
+
 EFTderiv[[1]]=EFTderiv[[1]]b1;(*corresponding to log b1*)
 
 cosmoderiv = (prederiv[[2;; ;;2]]-prederiv[[3;; ;;2]])/(2 CosmoShifts);
 cosmoderiv[[6]]=m\[Nu]back cosmoderiv[[6]];(*corresponding to log m\[Nu]*)
 
-fnlderiv=Table[D[prederiv[[1]],fnlcoefs[[i]]],{i,1,Length[fnlcoefs]}];
-
-derivs= Join[cosmoderiv,EFTderiv];
+derivs= Join[cosmoderiv,fnlderiv,EFTderiv];
 derivs
 ];
 
@@ -598,7 +611,7 @@ getkfeff[surveySpec_,cut_]:={Total[getkf[surveySpec][[;;cut]]surveySpec[[4,;;cut
 							Total[getkf[surveySpec][[cut+1;;]]surveySpec[[4,cut+1;;]]]/Total[surveySpec[[4,cut+1;;]]]};
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Priors for cosmological and EFT parameters for 1 and 4 skies*)
 
 
@@ -676,7 +689,7 @@ PCounter[k_,plin_,f1_]=2 CounterP13+StochasticP22;
 P13interp = Import[loopTablesPath<>"P13interp.m"];
 P22interp = Import[loopTablesPath<>"P22interp.m"];
 
-P13coefs[f1_] = Import[loopTablesPath<>"P13simpcoefs.m"]; 
+P13coefs[f1_] = Import[loopTablesPath<>"P13simpcoefs.m"]/.b25Toc24Sub; 
 P13kers[k1_] = Import[loopTablesPath<>"P13simppermks.m"];
 
 
@@ -803,14 +816,6 @@ CovPmulti[k_,pks_,biastab_,Surveytab_,fs_]:=Monitor[Sum[InvCovP2[k,pks,biastab[[
 GetFullzCovP[ks_,pks_,surveySpec_,biasfix_,dkk_]:=CovPmulti[ks,pks,shiftBiasFixb1Tab[surveySpec,biasfix],fixsurv[surveySpec,dkk],surveySpec[[6]]]//Expand;
 
 
-(*shiftBiasFixb1Tab[surveySpec_,biasfixold_]:=Module[{b1old, b1newlist},
-	b1old=b1/.biasfixold;
-	b1newlist=surveySpec[[7]];
-	Table[
-	shiftBiasFixb1[b1old,b1newlist[[i]],biasfixold],{i,1,Length[b1newlist]}]
-	];*)
-
-
 (* ::Subsubsection:: *)
 (*Fisher Matrices*)
 
@@ -884,7 +889,7 @@ TabExport[triangs_]:=Module[{B222precomp,file1,file2,file3,file4},
 		];													
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Preliminary functions and definitions*)
 
 
@@ -903,7 +908,9 @@ BCounter[k1_,k2_,k3_,Plin_,f1_,y_,y13_]=counterlist2;
 BCounterTree[k1_,k2_,k3_,Plin_,f1_,y_,y13_]=counterlist2Tree;
 
 (*Loop definitions and imports B[loop]coefs is the decomposition of the bias terms*)
-B222coefs[f1_,y_,y13_]=Import[loopTablesPath<>"b222coeflistmu.m"]/.normbias/.b25Toc24Sub;
+B222coefspre[f1_,y_,y13_]=Import[loopTablesPath<>"b222coeflistmu.m"]/.normbias/.b25Toc24Sub;
+B222coefs[f1_,y_,y13_]=SparseArray[B222coefspre[f1,y,y13]];
+
 B3211coefs[f1_,y_,y13_]=Import[loopTablesPath<>"b3211coeflistmu.m"]/.normbias/.b25Toc24Sub;
 B3212coefs[f1_,y_,y13_]=Import[loopTablesPath<>"b3212coeflistmu.m"]/.normbias/.b25Toc24Sub;
 B411coefs[f1_,y_,y13_]=Import[loopTablesPath<>"b411coeflistmu.m"]/.{b12->Bb11,b11->Bb12}/.normbias/.b25Toc24Sub;
@@ -1045,7 +1052,7 @@ BLoopDerivs[{k1_,k2_,k3_},pks_]:=Module[
 							   + B411ev[B411, ls, B411coef[f], PTab411[plin]]);
 
 
-	(*The order of derivatives here is {lnAs, ns, h, \[CapitalOmega]m, \[Omega]b, \[Nu]m, log(b1), BAllcoefs[[2;;]]}*)
+	(*The order of derivatives here is {lnAs, ns, h, \[CapitalOmega]m, \[Omega]b, \[Nu]m, \[CapitalOmega]k, log(b1), BAllcoefs[[2;;]]}*)
 	prederiv = Table[Bloopeval[pks[[i]][[{1,7,9}]]],{i,1,Length[pks]}];
 	Makederiv[prederiv]];
 	
@@ -1124,6 +1131,7 @@ BTreeDerivsNR[triangle_,pks_]:=BTreeDerivsNR[triangle,pks]+BNGDerivs[triangle,pk
 
 (*Inverse covariance already decompose in combinations of u and \[Mu]1*)
 Bcovlist =Import[loopTablesPath<>"Covlist.m"]/.ctP22[1]->Be1;
+(*Bcovlist =Import[loopTablesPath<>"BCovList.m"];*)
 sb[k1_,k2_,k3_]:=Module[{sym},sym=0;
 	If[k1===k2||k2===k3,sym=1];
 	If[k1===k2&&k2===k3,sym=5];
@@ -1153,6 +1161,9 @@ GetFullzCovB[Triangs_,pks_,surveySpec_,biasfix_,dkk_]:=CovBmulti[Triangs,pks,shi
 Dimensions[Bcovlist]=={319}
 
 
+Variables[Bcovlist]
+
+
 (* ::Subsubsection:: *)
 (*Preliminaries for redshift integrations*)
 
@@ -1167,9 +1178,7 @@ Blooplist = {1,u^2,u^4,u^6,u^8,u^10,u^12,u \[Mu]1,u^3 \[Mu]1,
 			 u^8 \[Mu]1^4,u \[Mu]1^5,u^3 \[Mu]1^5,u^5 \[Mu]1^5,u^7 \[Mu]1^5,\[Mu]1^6,u^2 \[Mu]1^6,
 			 u^4 \[Mu]1^6,u^6 \[Mu]1^6,u \[Mu]1^7,u^3 \[Mu]1^7,u^5 \[Mu]1^7,\[Mu]1^8,u^2 \[Mu]1^8,
 			 u^4 \[Mu]1^8,u \[Mu]1^9,u^3 \[Mu]1^9,\[Mu]1^10,u^2 \[Mu]1^10,u \[Mu]1^11,\[Mu]1^12};
-Bcoefstree = {1,u^2,u^4,u \[Mu]1,u^3 \[Mu]1,u^5 \[Mu]1,\[Mu]1^2,u^2 \[Mu]1^2,u^4 \[Mu]1^2,
-			  u^6 \[Mu]1^2,u \[Mu]1^3,u^3 \[Mu]1^3,u^5 \[Mu]1^3,\[Mu]1^4,u^2 \[Mu]1^4,u^4 \[Mu]1^4,
-			  u \[Mu]1^5,u^3 \[Mu]1^5,\[Mu]1^6,u^2 \[Mu]1^6,u \[Mu]1^7,\[Mu]1^8};
+
 covcoefs = {1,u^2,u^4,u^6,u^8,u^10,u^12,u^14,u^16,u^18,u^20,u^22,u^24,u \[Mu]1,
 			u^3 \[Mu]1,u^5 \[Mu]1,u^7 \[Mu]1,u^9 \[Mu]1,u^11 \[Mu]1,u^13 \[Mu]1,u^15 \[Mu]1,u^17 \[Mu]1,
 			u^19 \[Mu]1,u^21 \[Mu]1,u^23 \[Mu]1,\[Mu]1^2,u^2 \[Mu]1^2,u^4 \[Mu]1^2,u^6 \[Mu]1^2,u^8 \[Mu]1^2,
@@ -1203,6 +1212,14 @@ covcoefs = {1,u^2,u^4,u^6,u^8,u^10,u^12,u^14,u^16,u^18,u^20,u^22,u^24,u \[Mu]1,
 			u \[Mu]1^27,u^3 \[Mu]1^27,u^5 \[Mu]1^27,u^7 \[Mu]1^27,u^9 \[Mu]1^27,\[Mu]1^28,u^2 \[Mu]1^28,u^4 \[Mu]1^28,u^6 \[Mu]1^28,u^8 \[Mu]1^28,u \[Mu]1^29,u^3 \[Mu]1^29,
 			u^5 \[Mu]1^29,u^7 \[Mu]1^29,\[Mu]1^30,u^2 \[Mu]1^30,u^4 \[Mu]1^30,u^6 \[Mu]1^30,u \[Mu]1^31,u^3 \[Mu]1^31,u^5 \[Mu]1^31,\[Mu]1^32,u^2 \[Mu]1^32,u^4 \[Mu]1^32,
 			u \[Mu]1^33,u^3 \[Mu]1^33,\[Mu]1^34,u^2 \[Mu]1^34,u \[Mu]1^35,\[Mu]1^36};
+			
+			
+(*covcoefs={1,u^2,u^4,u^6,u^8,u^10,u^12,u \[Mu]1,u^3 \[Mu]1,u^5 \[Mu]1,u^7 \[Mu]1,u^9 \[Mu]1,u^11 \[Mu]1,\[Mu]1^2,u^2 \[Mu]1^2,u^4 \[Mu]1^2,u^6 \[Mu]1^2,u^8 \[Mu]1^2,u^10 \[Mu]1^2,
+		u^12 \[Mu]1^2,u \[Mu]1^3,u^3 \[Mu]1^3,u^5 \[Mu]1^3,u^7 \[Mu]1^3,u^9 \[Mu]1^3,u^11 \[Mu]1^3,\[Mu]1^4,u^2 \[Mu]1^4,u^4 \[Mu]1^4,u^6 \[Mu]1^4,u^8 \[Mu]1^4,u^10 \[Mu]1^4,u^12 \[Mu]1^4,
+		u \[Mu]1^5,u^3 \[Mu]1^5,u^5 \[Mu]1^5,u^7 \[Mu]1^5,u^9 \[Mu]1^5,u^11 \[Mu]1^5,\[Mu]1^6,u^2 \[Mu]1^6,u^4 \[Mu]1^6,u^6 \[Mu]1^6,u^8 \[Mu]1^6,u^10 \[Mu]1^6,u^12 \[Mu]1^6,u \[Mu]1^7,
+		u^3 \[Mu]1^7,u^5 \[Mu]1^7,u^7 \[Mu]1^7,u^9 \[Mu]1^7,u^11 \[Mu]1^7,\[Mu]1^8,u^2 \[Mu]1^8,u^4 \[Mu]1^8,u^6 \[Mu]1^8,u^8 \[Mu]1^8,u^10 \[Mu]1^8,u \[Mu]1^9,u^3 \[Mu]1^9,u^5 \[Mu]1^9,
+		u^7 \[Mu]1^9,u^9 \[Mu]1^9,\[Mu]1^10,u^2 \[Mu]1^10,u^4 \[Mu]1^10,u^6 \[Mu]1^10,u^8 \[Mu]1^10,u \[Mu]1^11,u^3 \[Mu]1^11,u^5 \[Mu]1^11,u^7 \[Mu]1^11,\[Mu]1^12,u^2 \[Mu]1^12,u^4 \[Mu]1^12,
+		u^6 \[Mu]1^12,u \[Mu]1^13,u^3 \[Mu]1^13,u^5 \[Mu]1^13,\[Mu]1^14,u^2 \[Mu]1^14,u^4 \[Mu]1^14,u \[Mu]1^15,u^3 \[Mu]1^15,\[Mu]1^16,u^2 \[Mu]1^16,u \[Mu]1^17,\[Mu]1^18};*)
 
 (*Angular integrations*)
 (*Integration tensors for full \[Mu] dependence*)
@@ -1237,7 +1254,7 @@ Dimensions[BLoopmastermono]=={49,49,319}
 GetFisherBNum[derivs_,covs_]:=(2048 - Length[covs] - 2)/(2048 - 1) Transpose[derivs.Blooplistmono].Inverse[covs].(derivs.Blooplistmono);
 
 (*Fisher with Analytical covariance*)
-GetFisherB[derivs_,invcovs_,inter_]:=Monitor[Sum[derivs[[i]].inter.invcovs[[i]].Transpose[derivs[[i]]],{i,1,Length[invcovs]}],i];
+GetFisherB[derivs_,invcovs_,inter_]:=Monitor[Sum[(derivs[[i]].inter.invcovs[[i]]).Transpose[derivs[[i]]],{i,1,Length[invcovs]}],i];
 GetFisherlistB[derivs_,invcovs_,inter_]:=Monitor[Table[derivs[[i]].inter.invcovs[[i]].(derivs[[i]]//Transpose),{i,1,Length[invcovs]}],i];
 
 (*Fisher with Analytical covariance, \[OpenCurlyDoubleQuote]Transformtoquad\[CloseCurlyDoubleQuote] quad cuts off all multipoles higher thean the quadrupoles. So intergating with iter=master gives you monopole and quadtupole contributions.
