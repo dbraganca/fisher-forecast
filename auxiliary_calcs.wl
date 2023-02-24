@@ -1,6 +1,14 @@
 (* ::Package:: *)
 
+
+
+
 SetDirectory[NotebookDirectory[]]
+(*load paths from json*)
+paths = Import["paths.json"]
+jmatpath="PLOOP_JMAT_PATH"/.paths
+LoopTablesPath="LOOP_TABLES_PATH"/.paths
+covsksPath="COVS_KS_PATH"/.paths
 
 
 (* ::Subsection:: *)
@@ -8,16 +16,10 @@ SetDirectory[NotebookDirectory[]]
 
 
 (*Calculate interpolators for power spectrum*)
-jmatpath="../GitHub/python-integer-power-project/2. Jmat_loopvals/";
-LoopTablesPath="tabs/";
-
-
 (*make ktab*)
-ktabCMASS = Import["covsks/ktabCMASS.m"];
-ktabLOWZ = Import["covsks/ktabLOWZ.m"];
-ktabraw = Import["covsks/ktabBase.m"];
-
-
+ktabCMASS = Import[covsksPath<>"ktabCMASS.m"];
+ktabLOWZ = Import[covsksPath<>"ktabLOWZ.m"];
+ktabraw = Import[covsksPath<>"ktabBase.m"];
 
 
 p13jfunc[k_]:=Import[jmatpath<>"P13/"<>ToString[Round[k,0.00001]]<>"_.h5","jmat"];

@@ -1,0 +1,9 @@
+{
+	"CTAB_PATH": "",
+	"LOOP_TABLES_PATH": "tabs/",
+	"COVS_KS_PATH": "covsks/",
+	"AUX_PATH": "aux_vars/",
+	"LOOP_COEFS_PATH": "",
+	"PLOOP_JMAT_PATH": "",
+	"BLOOP_JMAT_PATH": ""
+}

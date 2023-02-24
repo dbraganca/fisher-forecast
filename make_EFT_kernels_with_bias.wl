@@ -1,6 +1,6 @@
 (* ::Package:: *)
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Preliminaries*)
 
 
@@ -18,13 +18,14 @@ Directory,Print["Directory already exists."] (*do nothing*),
 File,Print["File with same name already exists!!"] (*error!*)];
 
 
-(*paths*)
-ctabpath="../GitHub/python-integer-power-project/3. Ctabs/";
-LoopTablesPath="tabs/";
-CovsPath="covsks/";
-AuxPath="aux_vars/";
-saveLoopCoefsPath = "D:/saveloops/";
+(*paths from json*)
+paths = Import["paths.json"]
 
+ctabpath= "CTAB_PATH"/.paths;;
+LoopTablesPath="LOOP_TABLES_PATH"/.paths;
+CovsPath="COVS_KS_PATH"/.paths;
+AuxPath="AUX_PATH"/.paths;
+saveLoopCoefsPath = "LOOP_COEFS_PATH"/.paths;
 
 
 CheckDir[ctabpath]
@@ -567,7 +568,7 @@ Do[
 (*K4rsym[q1_,q2_,q3_,q4_]:=K4distrsym[q1,q2,q3,q4]+K4rsome[q1,q2,q3,q4];*)
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*PS bias*)
 
 
@@ -640,7 +641,7 @@ p22ctabdec=MapThread[Append,{p22exps,p22biascoef}];
 p22biascoef.p22biaslist == p22coefs
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Export/Load*)
 
 
@@ -780,7 +781,7 @@ P31\[Mu]0list.\[Mu]0explist == P31simp//Expand
 p13biascoef.p13biaslist==P13coefs
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Export/Load*)
 
 
@@ -799,7 +800,7 @@ Export[LoopTablesPath<>"P13biaslist.m",p13biaslist]
 Export[LoopTablesPath<>"P13coefsdec.m",p13coefsdec]
 
 
-(* ::Section::Closed:: *)
+(* ::Section:: *)
 (*Tables of substitutions of integrals with \[Mu]0 into integrals of \[Mu]1, \[Mu]2*)
 
 
@@ -1155,7 +1156,7 @@ Export[LoopTablesPath<>"P13coefsdec.m",p13coefsdec]
 (*\[Mu]0sol4=1+(8 k1^2 k2^2 \[Mu]1^2)/(k1^4+(k2^2-k3^2)^2-2 k1^2 (k2^2+k3^2))+(16 k1^4 k2^4 \[Mu]1^4)/(k1^4+(k2^2-k3^2)^2-2 k1^2 (k2^2+k3^2))^2+(8 k1 k2 (k1^2+k2^2-k3^2) \[Mu]1 \[Mu]2)/(k1^4+(k2^2-k3^2)^2-2 k1^2 (k2^2+k3^2))+(32 k1^3 k2^3 (k1^2+k2^2-k3^2) \[Mu]1^3 \[Mu]2)/(k1^4+(k2^2-k3^2)^2-2 k1^2 (k2^2+k3^2))^2+(8 k1^2 k2^2 \[Mu]2^2)/(k1^4+(k2^2-k3^2)^2-2 k1^2 (k2^2+k3^2))+(2 k1^2 k2^2 (k1^2 k2^2+1/2 (k1^2+k2^2-k3^2)^2) \[Mu]1^2 \[Mu]2^2)/(k1^2 k2^2-1/4 (k1^2+k2^2-k3^2)^2)^2+(32 k1^3 k2^3 (k1^2+k2^2-k3^2) \[Mu]1 \[Mu]2^3)/(k1^4+(k2^2-k3^2)^2-2 k1^2 (k2^2+k3^2))^2+(16 k1^4 k2^4 \[Mu]2^4)/(k1^4+(k2^2-k3^2)^2-2 k1^2 (k2^2+k3^2))^2+((k1^2-k1pq^2+q^2)^2 (k2^2-k2mq^2+q^2)^2 ((k1^2 k2^2-1/4 (k1^2+k2^2-k3^2)^2)^2 (k1^2 k2^2+1/2 (k1^2+k2^2-k3^2)^2)-k1^2 (k1^2 k2^2-1/4 (k1^2+k2^2-k3^2)^2) (5 k1^2 k2^4+19/4 k2^2 (k1^2+k2^2-k3^2)^2) \[Mu]1^2+4 k1^4 (k1^2 k2^6+5/4 k2^4 (k1^2+k2^2-k3^2)^2) \[Mu]1^4-14 k1^5 k2^5 (k1^2+k2^2-k3^2) \[Mu]1 \[Mu]2+k1^3 k2^3 (k1^2+k2^2-k3^2)^3 \[Mu]1 \[Mu]2+5/8 k1 k2 (k1^2+k2^2-k3^2)^5 \[Mu]1 \[Mu]2+20 k1^5 k2^5 (k1^2+k2^2-k3^2) \[Mu]1^3 \[Mu]2+7 k1^3 k2^3 (k1^2+k2^2-k3^2)^3 \[Mu]1^3 \[Mu]2-k2^2 (k1^2 k2^2-1/4 (k1^2+k2^2-k3^2)^2) (5 k1^4 k2^2+19/4 k1^2 (k1^2+k2^2-k3^2)^2) \[Mu]2^2+k1^2 k2^2 (11 k1^4 k2^4+49/2 k1^2 k2^2 (k1^2+k2^2-k3^2)^2+35/16 (k1^2+k2^2-k3^2)^4) \[Mu]1^2 \[Mu]2^2+20 k1^5 k2^5 (k1^2+k2^2-k3^2) \[Mu]1 \[Mu]2^3+7 k1^3 k2^3 (k1^2+k2^2-k3^2)^3 \[Mu]1 \[Mu]2^3+4 k2^4 (k1^6 k2^2+5/4 k1^4 (k1^2+k2^2-k3^2)^2) \[Mu]2^4))/(8 (k1^2 k2^2-1/4 (k1^2+k2^2-k3^2)^2)^4 q^4)-1/(4 q^4) k1 (k1^2-k1pq^2+q^2) (k2^2-k2mq^2+q^2)^3 ((8 k1 (k1^2+k2^2-k3^2))/(k1^4+(k2^2-k3^2)^2-2 k1^2 (k2^2+k3^2))^2-(k1 (-(5/2) k1^2 k2^2 (k1^2+k2^2-k3^2)-3/8 (k1^2+k2^2-k3^2)^3) \[Mu]1^2)/(-k1^2 k2^2+1/4 (k1^2+k2^2-k3^2)^2)^3+(128 k1^3 k2^2 (k1^2+k2^2-k3^2) (k1^4+k1^2 (6 k2^2-2 k3^2)+(k2^2-k3^2)^2) \[Mu]1^4)/(k1^4+(k2^2-k3^2)^2-2 k1^2 (k2^2+k3^2))^4+(k2 (3 k1^4 k2^2+13/4 k1^2 (k1^2+k2^2-k3^2)^2) \[Mu]1 \[Mu]2)/(-k1^2 k2^2+1/4 (k1^2+k2^2-k3^2)^2)^3+(k1^2 k2 (3 k1^4 k2^4+11/2 k1^2 k2^2 (k1^2+k2^2-k3^2)^2+7/16 (k1^2+k2^2-k3^2)^4) \[Mu]1^3 \[Mu]2)/(k1^2 k2^2-1/4 (k1^2+k2^2-k3^2)^2)^4+(256 k1^3 k2^2 (k1^2+k2^2-k3^2) \[Mu]2^2)/(k1^4+(k2^2-k3^2)^2-2 k1^2 (k2^2+k3^2))^3-(4 k1 k2^2 (-(5/2) k1^4 k2^2 (k1^2+k2^2-k3^2)-7/8 k1^2 (k1^2+k2^2-k3^2)^3) \[Mu]1^2 \[Mu]2^2)/(k1^2 k2^2-1/4 (k1^2+k2^2-k3^2)^2)^4+(4 k2^3 (k1^6 k2^2+7/4 k1^4 (k1^2+k2^2-k3^2)^2) \[Mu]1 \[Mu]2^3)/(k1^2 k2^2-1/4 (k1^2+k2^2-k3^2)^2)^4+(1024 k1^5 k2^4 (k1^2+k2^2-k3^2) \[Mu]2^4)/(k1^4+(k2^2-k3^2)^2-2 k1^2 (k2^2+k3^2))^4)-1/(4 q^4) k2 (k1^2-k1pq^2+q^2)^3 (k2^2-k2mq^2+q^2) ((8 k2 (k1^2+k2^2-k3^2))/(k1^4+(k2^2-k3^2)^2-2 k1^2 (k2^2+k3^2))^2+(256 k1^2 k2^3 (k1^2+k2^2-k3^2) \[Mu]1^2)/(k1^4+(k2^2-k3^2)^2-2 k1^2 (k2^2+k3^2))^3+(1024 k1^4 k2^5 (k1^2+k2^2-k3^2) \[Mu]1^4)/(k1^4+(k2^2-k3^2)^2-2 k1^2 (k2^2+k3^2))^4+(k1 (3 k1^2 k2^4+13/4 k2^2 (k1^2+k2^2-k3^2)^2) \[Mu]1 \[Mu]2)/(-k1^2 k2^2+1/4 (k1^2+k2^2-k3^2)^2)^3+(4 k1^3 (k1^2 k2^6+7/4 k2^4 (k1^2+k2^2-k3^2)^2) \[Mu]1^3 \[Mu]2)/(k1^2 k2^2-1/4 (k1^2+k2^2-k3^2)^2)^4-(k2 (-(5/2) k1^2 k2^2 (k1^2+k2^2-k3^2)-3/8 (k1^2+k2^2-k3^2)^3) \[Mu]2^2)/(-k1^2 k2^2+1/4 (k1^2+k2^2-k3^2)^2)^3-(4 k1^2 k2 (-(5/2) k1^2 k2^4 (k1^2+k2^2-k3^2)-7/8 k2^2 (k1^2+k2^2-k3^2)^3) \[Mu]1^2 \[Mu]2^2)/(k1^2 k2^2-1/4 (k1^2+k2^2-k3^2)^2)^4+(k1 k2^2 (3 k1^4 k2^4+11/2 k1^2 k2^2 (k1^2+k2^2-k3^2)^2+7/16 (k1^2+k2^2-k3^2)^4) \[Mu]1 \[Mu]2^3)/(k1^2 k2^2-1/4 (k1^2+k2^2-k3^2)^2)^4+(128 k1^2 k2^3 (k1^2+k2^2-k3^2) (k1^4+k1^2 (6 k2^2-2 k3^2)+(k2^2-k3^2)^2) \[Mu]2^4)/(k1^4+(k2^2-k3^2)^2-2 k1^2 (k2^2+k3^2))^4)+(k2^4 (k1^2-k1pq^2+q^2)^4 (32 k1^7 k2 \[Mu]1 \[Mu]2 (1+\[Mu]2^2)+32 k1 k2 (k2^2-k3^2)^3 \[Mu]1 \[Mu]2 (1+\[Mu]2^2)+k1^8 (1+6 \[Mu]2^2+\[Mu]2^4)+(k2^2-k3^2)^4 (1+6 \[Mu]2^2+\[Mu]2^4)+32 k1^5 k2 \[Mu]1 \[Mu]2 (-3 k3^2 (1+\[Mu]2^2)+k2^2 (-1+8 \[Mu]1^2+7 \[Mu]2^2))+32 k1^3 k2 (k2^2-k3^2) \[Mu]1 \[Mu]2 (-3 k3^2 (1+\[Mu]2^2)+k2^2 (-1+8 \[Mu]1^2+7 \[Mu]2^2))+4 k1^6 (-k3^2 (1+6 \[Mu]2^2+\[Mu]2^4)+k2^2 (-1+2 \[Mu]2^2+7 \[Mu]2^4+8 \[Mu]1^2 (1+5 \[Mu]2^2)))+4 k1^2 (k2^2-k3^2)^2 (-k3^2 (1+6 \[Mu]2^2+\[Mu]2^4)+k2^2 (-1+2 \[Mu]2^2+7 \[Mu]2^4+8 \[Mu]1^2 (1+5 \[Mu]2^2)))+2 k1^4 (3 k3^4 (1+6 \[Mu]2^2+\[Mu]2^4)-2 k2^2 k3^2 (-1+10 \[Mu]2^2+15 \[Mu]2^4+16 \[Mu]1^2 (1+5 \[Mu]2^2))+k2^4 (3+64 \[Mu]1^4-14 \[Mu]2^2+35 \[Mu]2^4+32 \[Mu]1^2 (-1+7 \[Mu]2^2)))))/((k1^4+(k2^2-k3^2)^2-2 k1^2 (k2^2+k3^2))^4 q^4)+(2 k2^2 (k1^2-k1pq^2+q^2)^2 (k1^8 (1+3 \[Mu]2^2)+(k2^2-k3^2)^4 (1+3 \[Mu]2^2)+4 k1^7 k2 \[Mu]1 \[Mu]2 (5+3 \[Mu]2^2)+4 k1 k2 (k2^2-k3^2)^3 \[Mu]1 \[Mu]2 (5+3 \[Mu]2^2)+4 k1^5 k2 \[Mu]1 \[Mu]2 (-3 k3^2 (5+3 \[Mu]2^2)+k2^2 (-5+32 \[Mu]1^2+29 \[Mu]2^2))+4 k1^3 k2 (k2^2-k3^2) \[Mu]1 \[Mu]2 (-3 k3^2 (5+3 \[Mu]2^2)+k2^2 (-5+32 \[Mu]1^2+29 \[Mu]2^2))+4 k1^6 (-k3^2 (1+3 \[Mu]2^2)+k2^2 (-1+2 \[Mu]2^2+3 \[Mu]2^4+\[Mu]1^2 (5+19 \[Mu]2^2)))+4 k1^2 (k2^2-k3^2)^2 (-k3^2 (1+3 \[Mu]2^2)+k2^2 (-1+2 \[Mu]2^2+3 \[Mu]2^4+\[Mu]1^2 (5+19 \[Mu]2^2)))+2 k1^4 (3 k3^4 (1+3 \[Mu]2^2)-2 k2^2 k3^2 (-1+7 \[Mu]2^2+6 \[Mu]2^4+2 \[Mu]1^2 (5+19 \[Mu]2^2))+k2^4 (3+32 \[Mu]1^4-11 \[Mu]2^2+20 \[Mu]2^4+4 \[Mu]1^2 (-5+29 \[Mu]2^2)))))/((k1^4+(k2^2-k3^2)^2-2 k1^2 (k2^2+k3^2))^3 q^2)+(k1^4 (k2^2-k2mq^2+q^2)^4 (k1^8 (1+6 \[Mu]1^2+\[Mu]1^4)+(k2^2-k3^2)^4 (1+6 \[Mu]1^2+\[Mu]1^4)+32 k1^7 k2 \[Mu]1 (1+\[Mu]1^2) \[Mu]2+32 k1 k2 (k2^2-k3^2)^3 \[Mu]1 (1+\[Mu]1^2) \[Mu]2+32 k1^5 k2 \[Mu]1 \[Mu]2 (-3 k3^2 (1+\[Mu]1^2)+k2^2 (-1+7 \[Mu]1^2+8 \[Mu]2^2))+32 k1^3 k2 (k2^2-k3^2) \[Mu]1 \[Mu]2 (-3 k3^2 (1+\[Mu]1^2)+k2^2 (-1+7 \[Mu]1^2+8 \[Mu]2^2))+2 k1^4 (3 k3^4 (1+6 \[Mu]1^2+\[Mu]1^4)-2 k2^2 k3^2 (-1+15 \[Mu]1^4+16 \[Mu]2^2+10 \[Mu]1^2 (1+8 \[Mu]2^2))+k2^4 (3+35 \[Mu]1^4-32 \[Mu]2^2+64 \[Mu]2^4+14 \[Mu]1^2 (-1+16 \[Mu]2^2)))+4 k1^6 (-k3^2 (1+6 \[Mu]1^2+\[Mu]1^4)+k2^2 (-1+7 \[Mu]1^4+8 \[Mu]2^2+\[Mu]1^2 (2+40 \[Mu]2^2)))+4 k1^2 (k2^2-k3^2)^2 (-k3^2 (1+6 \[Mu]1^2+\[Mu]1^4)+k2^2 (-1+7 \[Mu]1^4+8 \[Mu]2^2+\[Mu]1^2 (2+40 \[Mu]2^2)))))/((k1^4+(k2^2-k3^2)^2-2 k1^2 (k2^2+k3^2))^4 q^4)-(2 (k1^2-k1pq^2+q^2) (k2^2-k2mq^2+q^2) (k1^10+(k2^2-k3^2)^5+14 k1^9 k2 \[Mu]1 \[Mu]2+14 k1 k2 (k2^2-k3^2)^4 \[Mu]1 \[Mu]2+4 k1^5 k2 \[Mu]1 \[Mu]2 (21 k3^4-26 k2^2 k3^2 (1+2 \[Mu]1^2+2 \[Mu]2^2)+19 k2^4 (-1+4 \[Mu]1^2+4 \[Mu]2^2))+8 k1^7 k2 \[Mu]1 \[Mu]2 (-7 k3^2+k2^2 (3+13 \[Mu]1^2+13 \[Mu]2^2))+8 k1^3 k2 (k2^2-k3^2)^2 \[Mu]1 \[Mu]2 (-7 k3^2+k2^2 (3+13 \[Mu]1^2+13 \[Mu]2^2))+k1^8 (-5 k3^2+k2^2 (-3+20 \[Mu]2^2+20 \[Mu]1^2 (1+2 \[Mu]2^2)))+k1^2 (k2^2-k3^2)^3 (-5 k3^2+k2^2 (-3+20 \[Mu]2^2+20 \[Mu]1^2 (1+2 \[Mu]2^2)))+2 k1^6 (5 k3^4-2 k2^2 k3^2 (-1+15 \[Mu]2^2+15 \[Mu]1^2 (1+2 \[Mu]2^2))+k2^4 (1+32 \[Mu]1^4-10 \[Mu]2^2+32 \[Mu]2^4+2 \[Mu]1^2 (-5+86 \[Mu]2^2)))+2 k1^4 (k2^2-k3^2) (5 k3^4-2 k2^2 k3^2 (-1+15 \[Mu]2^2+15 \[Mu]1^2 (1+2 \[Mu]2^2))+k2^4 (1+32 \[Mu]1^4-10 \[Mu]2^2+32 \[Mu]2^4+2 \[Mu]1^2 (-5+86 \[Mu]2^2)))))/((k1^4+(k2^2-k3^2)^2-2 k1^2 (k2^2+k3^2))^3 q^2)+(2 k1^2 (k2^2-k2mq^2+q^2)^2 (k1^8 (1+3 \[Mu]1^2)+(k2^2-k3^2)^4 (1+3 \[Mu]1^2)+4 k1^7 k2 \[Mu]1 (5+3 \[Mu]1^2) \[Mu]2+4 k1 k2 (k2^2-k3^2)^3 \[Mu]1 (5+3 \[Mu]1^2) \[Mu]2+4 k1^5 k2 \[Mu]1 \[Mu]2 (-3 k3^2 (5+3 \[Mu]1^2)+k2^2 (-5+29 \[Mu]1^2+32 \[Mu]2^2))+4 k1^3 k2 (k2^2-k3^2) \[Mu]1 \[Mu]2 (-3 k3^2 (5+3 \[Mu]1^2)+k2^2 (-5+29 \[Mu]1^2+32 \[Mu]2^2))+4 k1^6 (-k3^2 (1+3 \[Mu]1^2)+k2^2 (-1+3 \[Mu]1^4+5 \[Mu]2^2+\[Mu]1^2 (2+19 \[Mu]2^2)))+4 k1^2 (k2^2-k3^2)^2 (-k3^2 (1+3 \[Mu]1^2)+k2^2 (-1+3 \[Mu]1^4+5 \[Mu]2^2+\[Mu]1^2 (2+19 \[Mu]2^2)))+2 k1^4 (3 k3^4 (1+3 \[Mu]1^2)-2 k2^2 k3^2 (-1+6 \[Mu]1^4+10 \[Mu]2^2+\[Mu]1^2 (7+38 \[Mu]2^2))+k2^4 (3+20 \[Mu]1^4-20 \[Mu]2^2+32 \[Mu]2^4+\[Mu]1^2 (-11+116 \[Mu]2^2)))))/((k1^4+(k2^2-k3^2)^2-2 k1^2 (k2^2+k3^2))^3 q^2);*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Fifth order, \[Mu]0^5*)
 
 
@@ -1212,7 +1213,7 @@ Export[LoopTablesPath<>"P13coefsdec.m",p13coefsdec]
 (*Export[AuxPath<>"TdotT5.m",TdotT]*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Sixth order, \[Mu]0^6*)
 
 
@@ -1266,7 +1267,7 @@ Export[LoopTablesPath<>"P13coefsdec.m",p13coefsdec]
 (*Export[(AuxPath<>"TdotT6.m"),TdotT]*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Save everything up to \[Mu]0^4 (higher exponents are too slow, do numerically)*)
 
 
@@ -1274,7 +1275,7 @@ Export[LoopTablesPath<>"P13coefsdec.m",p13coefsdec]
 Export[AuxPath<>"mu0sol_nonsym_upto4.m",{1,\[Mu]0sol1,\[Mu]0sol2,\[Mu]0sol3,\[Mu]0sol4}]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Redshift space kernels, \[Mu]0 expansion dependent only on k1, up to \[Mu]0^2 (for B3212)*)
 
 
@@ -1427,7 +1428,7 @@ Export[AuxPath<>"mu0solk1_vec_upto2.m",{1,\[Mu]0sol1,\[Mu]0sol2}]
 (*rules\[Mu]01={x^a_.->angint[a,0,0,0],(Sqrt[1-x^2])^b_.->angint[0,b,0,0], Cos[\[Beta]]^c_.->angint[0,0,c,0],Sin[\[Beta]]^d_.->angint[0,0,0,d]};*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*Btree with permutations*)
 
 
@@ -1463,11 +1464,11 @@ Bpermcheck==Bcheck//Simplify
 Export[LoopTablesPath<>"BtreePerms.m",BtreePerms]
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsection:: *)
 (*B222*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Preliminaries*)
 
 
@@ -1489,12 +1490,15 @@ b222temptomu4=ker222expmu0[[1;;5]].\[Mu]0solb222;
 b222tomu4=Join[{b222temptomu4},ker222expmu0[[{6,7}]]];
 
 
+Export[AuxPath<>"b222tomu4.m",b222tomu4]
+
+
 (*checks*)
 \[Mu]0tab222=={1,\[Mu]0,\[Mu]0^2,\[Mu]0^3,\[Mu]0^4,\[Mu]0^5,\[Mu]0^6}
 ker222expmu0.\[Mu]0tab222==ker222exp//Expand
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Simplify first part (up to \[Mu]0^4) *)
 
 
@@ -1508,35 +1512,32 @@ b222part1exps=b222part1ctab[[All,1;;3]];
 b222part1coefs=b222part1ctab[[All,4]];
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Simplify second part (\[Mu]0^5)*)
 
 
-(* ::Input:: *)
-(*Tint\[Mu]5=Import[AuxPath<>"Tdotint5.m"];*)
-(*Tint\[Mu]5ctab=Import[AuxPath<>"Tdotint5ctab.m"];*)
-(*TT\[Mu]5=Import[AuxPath<>"TdotT5.m"];*)
-(*Tz\[Mu]5=Import[AuxPath<>"Tdotz5.m"];*)
+Tint\[Mu]5=Import[AuxPath<>"Tdotint5.m"];
+Tint\[Mu]5ctab=Import[AuxPath<>"Tdotint5ctab.m"];
+TT\[Mu]5=Import[AuxPath<>"TdotT5.m"];
+Tz\[Mu]5=Import[AuxPath<>"Tdotz5.m"];
 
 
-(* ::Input:: *)
-(*Tint5fn[k1_,k2_,k3_]=Tint\[Mu]5;*)
-(*Tint5ctabfn[k1_,k2_,k3_]=Tint\[Mu]5ctab;*)
-(*TT5fn[k1_,k2_,k3_]=TT\[Mu]5;*)
-(*TTinv5fn[k1_,k2_,k3_]:=Inverse[SetPrecision[TT5fn[k1,k2,k3],20]];*)
-(*Tz5fn[k1_,k2_,k3_]=Tz\[Mu]5;*)
-(*TzTTinv5fn[k1_,k2_,k3_]:=Tz5fn[k1,k2,k3].TTinv5fn[k1,k2,k3];*)
-(**)
-(*Tint5exps=Tint\[Mu]5ctab[[All,All,1;;3]];*)
+Tint5fn[k1_,k2_,k3_]=Tint\[Mu]5;
+Tint5ctabfn[k1_,k2_,k3_]=Tint\[Mu]5ctab;
+TT5fn[k1_,k2_,k3_]=TT\[Mu]5;
+TTinv5fn[k1_,k2_,k3_]:=Inverse[SetPrecision[TT5fn[k1,k2,k3],20]];
+Tz5fn[k1_,k2_,k3_]=Tz\[Mu]5;
+TzTTinv5fn[k1_,k2_,k3_]:=Tz5fn[k1,k2,k3].TTinv5fn[k1,k2,k3];
+
+Tint5exps=Tint\[Mu]5ctab[[All,All,1;;3]];
 
 
-(* ::Input:: *)
-(*(*express \[Mu]0^5 with ctab - much faster*)*)
-(*\[Mu]0ctab5[k1_,k2_,k3_]:=Module[{coefs,Tintval,newctab},*)
-(*Tintval=Tint5ctabfn[k1,k2,k3];*)
-(*coefs=TzTTinv5fn[k1,k2,k3]*Tintval[[All,All,4]];*)
-(*newctab=Flatten[MapThread[MapThread[Append,{#1,#2}]&,{Tint5exps,coefs}],1];*)
-(*compressor[newctab//Expand]];*)
+(*express \[Mu]0^5 with ctab - much faster*)
+\[Mu]0ctab5[k1_,k2_,k3_]:=Module[{coefs,Tintval,newctab},
+Tintval=Tint5ctabfn[k1,k2,k3];
+coefs=TzTTinv5fn[k1,k2,k3]*Tintval[[All,All,4]];
+newctab=Flatten[MapThread[MapThread[Append,{#1,#2}]&,{Tint5exps,coefs}],1];
+compressor[newctab//Expand]];
 
 
 (*Check against standard calculation of \[Mu]0*)
@@ -1549,10 +1550,14 @@ Clear[\[Mu]0sol5]
 \[Mu]0ctab5check[[All,1;;3]]==\[Mu]0sol5checkctab[[All,1;;3]]
 
 
-(* ::Input:: *)
-(*b222part2exp=b222tomu4[[2]]//Expand;*)
-(*b222part2expfn[k1_,k2_,k3_]=b222part2exp;*)
-(*b222part2ctabfn[k1_,k2_,k3_]=compressor[getCtab[b222part2exp]];*)
+b222part2exp=b222tomu4[[2]]//Expand;
+b222part2expfn[k1_,k2_,k3_]=b222part2exp;
+b222part2ctabfn[k1_,k2_,k3_]=compressor[getCtab[b222part2exp]];
+Export[AuxPath<>"b222part2ctab.m",b222part2ctabfn[k1,k2,k3]]
+
+
+b222part2ctab = Import[AuxPath<>"b222part2ctab.m"];
+b222part2ctabfn[k1_,k2_,k3_]=b222part2ctab;
 
 
 (* ::Input:: *)
@@ -1564,39 +1569,36 @@ Clear[\[Mu]0sol5]
 (*];*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Simplify third part (\[Mu]0^6)*)
 
 
-(* ::Input:: *)
-(*Tint\[Mu]6=Import[(AuxPath<>"Tdotint6.m")];*)
-(*Tint\[Mu]6ctab=Import[AuxPath<>"Tdotint6ctab.m"];*)
-(*TT\[Mu]6=Import[(AuxPath<>"TdotT6.m")];*)
-(*Tz\[Mu]6=Import[(AuxPath<>"Tdotz6.m")];*)
-(**)
-(*Tint6fn[k1_,k2_,k3_]=Tint\[Mu]6;*)
-(*Tint6ctabfn[k1_,k2_,k3_]=Tint\[Mu]6ctab;*)
-(*TT6fn[k1_,k2_,k3_]=TT\[Mu]6;*)
-(*TTinv6fn[k1_,k2_,k3_]:=Inverse[SetPrecision[TT6fn[k1,k2,k3],20]];*)
-(*Tz6fn[k1_,k2_,k3_]=Tz\[Mu]6;*)
-(**)
-(*TzTTinv6fn[k1_,k2_,k3_]:=Tz6fn[k1,k2,k3].TTinv6fn[k1,k2,k3];*)
-(**)
-(*Tint6exps=Tint\[Mu]6ctab[[All,All,1;;3]];*)
+Tint\[Mu]6=Import[(AuxPath<>"Tdotint6.m")];
+Tint\[Mu]6ctab=Import[AuxPath<>"Tdotint6ctab.m"];
+TT\[Mu]6=Import[(AuxPath<>"TdotT6.m")];
+Tz\[Mu]6=Import[(AuxPath<>"Tdotz6.m")];
+
+Tint6fn[k1_,k2_,k3_]=Tint\[Mu]6;
+Tint6ctabfn[k1_,k2_,k3_]=Tint\[Mu]6ctab;
+TT6fn[k1_,k2_,k3_]=TT\[Mu]6;
+TTinv6fn[k1_,k2_,k3_]:=Inverse[SetPrecision[TT6fn[k1,k2,k3],20]];
+Tz6fn[k1_,k2_,k3_]=Tz\[Mu]6;
+
+TzTTinv6fn[k1_,k2_,k3_]:=Tz6fn[k1,k2,k3].TTinv6fn[k1,k2,k3];
+
+Tint6exps=Tint\[Mu]6ctab[[All,All,1;;3]];
 
 
-(* ::Input:: *)
-(*Tint6coefs=Tint\[Mu]6ctab[[All,All,4]];*)
-(*Tint6coefsfn[k1_,k2_]=Tint6coefs;*)
+Tint6coefs=Tint\[Mu]6ctab[[All,All,4]];
+Tint6coefsfn[k1_,k2_]=Tint6coefs;
 
 
-(* ::Input:: *)
-(*(*express \[Mu]0^6 with ctab*)*)
-(*\[Mu]0ctab6[k1_,k2_,k3_]:=Module[{coefs,Tintval,newctab},*)
-(*coefs=TzTTinv6fn[k1,k2,k3]*Tint6coefsfn[k1,k2];*)
-(*newctab=Flatten[MapThread[MapThread[Append,{#1,#2}]&,{Tint6exps,coefs}],1];*)
-(*compressor[newctab]//Expand*)
-(*];*)
+(*express \[Mu]0^6 with ctab*)
+\[Mu]0ctab6[k1_,k2_,k3_]:=Module[{coefs,Tintval,newctab},
+coefs=TzTTinv6fn[k1,k2,k3]*Tint6coefsfn[k1,k2];
+newctab=Flatten[MapThread[MapThread[Append,{#1,#2}]&,{Tint6exps,coefs}],1];
+compressor[newctab]//Expand
+];
 
 
 (* ::Input:: *)
@@ -1621,7 +1623,7 @@ Clear[\[Mu]0sol5]
 (*];*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Join \[Mu]0^5 and \[Mu]0^6 ctabs*)
 
 
@@ -1642,27 +1644,74 @@ b222part23ctab=b222\[Mu]56ctab[0.11,0.12,0.13];
 
 
 b222vars={b1,b2,b5,f1,\[Mu]1,\[Mu]2};
+(*Get all bias monomials that appear in the b222 kernel*)
+(*
+b222biaslistpart1=getMonomials[b222vars,b222part1ctab];
+b222biaslistpart23=getMonomials[b222vars,b222part23ctab];
+b222biaslist=Union[b222biaslistpart1,b222biaslistpart23];
+*)
+b222biaslist={b1^3,b1^2 b2,b1 b2^2,b2^3,b1^2 b5,b1 b2 b5,b2^2 b5,b1 b5^2,b2 b5^2,b5^3,b1^2 f1 \[Mu]1^2,
+b1^3 f1 \[Mu]1^2,b1 b2 f1 \[Mu]1^2,b1^2 b2 f1 \[Mu]1^2,b2^2 f1 \[Mu]1^2,b1 b2^2 f1 \[Mu]1^2,b1 b5 f1 \[Mu]1^2,b1^2 b5 f1 \[Mu]1^2,
+b2 b5 f1 \[Mu]1^2,b1 b2 b5 f1 \[Mu]1^2,b5^2 f1 \[Mu]1^2,b1 b5^2 f1 \[Mu]1^2,b1^2 f1^2 \[Mu]1^2,b1^3 f1^2 \[Mu]1^2,b1 b2 f1^2 \[Mu]1^2,
+b1^2 b2 f1^2 \[Mu]1^2,b2^2 f1^2 \[Mu]1^2,b1 b5 f1^2 \[Mu]1^2,b1^2 b5 f1^2 \[Mu]1^2,b2 b5 f1^2 \[Mu]1^2,b5^2 f1^2 \[Mu]1^2,b1 f1^2 \[Mu]1^4,
+b1^2 f1^2 \[Mu]1^4,b1^3 f1^2 \[Mu]1^4,b2 f1^2 \[Mu]1^4,b1 b2 f1^2 \[Mu]1^4,b1^2 b2 f1^2 \[Mu]1^4,b2^2 f1^2 \[Mu]1^4,b5 f1^2 \[Mu]1^4,
+b1 b5 f1^2 \[Mu]1^4,b1^2 b5 f1^2 \[Mu]1^4,b2 b5 f1^2 \[Mu]1^4,b5^2 f1^2 \[Mu]1^4,b1 f1^3 \[Mu]1^4,b1^2 f1^3 \[Mu]1^4,b2 f1^3 \[Mu]1^4,
+b1 b2 f1^3 \[Mu]1^4,b5 f1^3 \[Mu]1^4,b1 b5 f1^3 \[Mu]1^4,b1 f1^4 \[Mu]1^4,b2 f1^4 \[Mu]1^4,b5 f1^4 \[Mu]1^4,b1 f1^3 \[Mu]1^6,b1^2 f1^3 \[Mu]1^6,
+b2 f1^3 \[Mu]1^6,b1 b2 f1^3 \[Mu]1^6,b5 f1^3 \[Mu]1^6,b1 b5 f1^3 \[Mu]1^6,b1 f1^4 \[Mu]1^6,b2 f1^4 \[Mu]1^6,b5 f1^4 \[Mu]1^6,b1 f1^4 \[Mu]1^8,
+b2 f1^4 \[Mu]1^8,b5 f1^4 \[Mu]1^8,b1^2 f1 \[Mu]1 \[Mu]2,b1^3 f1 \[Mu]1 \[Mu]2,b1 b2 f1 \[Mu]1 \[Mu]2,b1^2 b2 f1 \[Mu]1 \[Mu]2,b2^2 f1 \[Mu]1 \[Mu]2,
+b1 b2^2 f1 \[Mu]1 \[Mu]2,b1 b5 f1 \[Mu]1 \[Mu]2,b1^2 b5 f1 \[Mu]1 \[Mu]2,b2 b5 f1 \[Mu]1 \[Mu]2,b1 b2 b5 f1 \[Mu]1 \[Mu]2,b5^2 f1 \[Mu]1 \[Mu]2,b1 b5^2 f1 \[Mu]1 \[Mu]2,
+b1^2 f1^2 \[Mu]1 \[Mu]2,b1^3 f1^2 \[Mu]1 \[Mu]2,b1 b2 f1^2 \[Mu]1 \[Mu]2,b1^2 b2 f1^2 \[Mu]1 \[Mu]2,b2^2 f1^2 \[Mu]1 \[Mu]2,b1 b5 f1^2 \[Mu]1 \[Mu]2,
+b1^2 b5 f1^2 \[Mu]1 \[Mu]2,b2 b5 f1^2 \[Mu]1 \[Mu]2,b5^2 f1^2 \[Mu]1 \[Mu]2,b1 f1^2 \[Mu]1^3 \[Mu]2,b1^2 f1^2 \[Mu]1^3 \[Mu]2,b1^3 f1^2 \[Mu]1^3 \[Mu]2,
+b2 f1^2 \[Mu]1^3 \[Mu]2,b1 b2 f1^2 \[Mu]1^3 \[Mu]2,b1^2 b2 f1^2 \[Mu]1^3 \[Mu]2,b2^2 f1^2 \[Mu]1^3 \[Mu]2,b5 f1^2 \[Mu]1^3 \[Mu]2,b1 b5 f1^2 \[Mu]1^3 \[Mu]2,
+b1^2 b5 f1^2 \[Mu]1^3 \[Mu]2,b2 b5 f1^2 \[Mu]1^3 \[Mu]2,b5^2 f1^2 \[Mu]1^3 \[Mu]2,b1 f1^3 \[Mu]1^3 \[Mu]2,b1^2 f1^3 \[Mu]1^3 \[Mu]2,b1^3 f1^3 \[Mu]1^3 \[Mu]2,
+b2 f1^3 \[Mu]1^3 \[Mu]2,b1 b2 f1^3 \[Mu]1^3 \[Mu]2,b5 f1^3 \[Mu]1^3 \[Mu]2,b1 b5 f1^3 \[Mu]1^3 \[Mu]2,b1 f1^4 \[Mu]1^3 \[Mu]2,b1^2 f1^4 \[Mu]1^3 \[Mu]2,
+b2 f1^4 \[Mu]1^3 \[Mu]2,b5 f1^4 \[Mu]1^3 \[Mu]2,b1 f1^3 \[Mu]1^5 \[Mu]2,b1^2 f1^3 \[Mu]1^5 \[Mu]2,b1^3 f1^3 \[Mu]1^5 \[Mu]2,b2 f1^3 \[Mu]1^5 \[Mu]2,
+b1 b2 f1^3 \[Mu]1^5 \[Mu]2,b5 f1^3 \[Mu]1^5 \[Mu]2,b1 b5 f1^3 \[Mu]1^5 \[Mu]2,b1 f1^4 \[Mu]1^5 \[Mu]2,b1^2 f1^4 \[Mu]1^5 \[Mu]2,b2 f1^4 \[Mu]1^5 \[Mu]2,
+b5 f1^4 \[Mu]1^5 \[Mu]2,b1 f1^5 \[Mu]1^5 \[Mu]2,b1 f1^4 \[Mu]1^7 \[Mu]2,b1^2 f1^4 \[Mu]1^7 \[Mu]2,b2 f1^4 \[Mu]1^7 \[Mu]2,b5 f1^4 \[Mu]1^7 \[Mu]2,b1 f1^5 \[Mu]1^7 \[Mu]2,
+b1 f1^5 \[Mu]1^9 \[Mu]2,b1^2 f1 \[Mu]2^2,b1^3 f1 \[Mu]2^2,b1 b2 f1 \[Mu]2^2,b1^2 b2 f1 \[Mu]2^2,b2^2 f1 \[Mu]2^2,b1 b2^2 f1 \[Mu]2^2,b1 b5 f1 \[Mu]2^2,
+b1^2 b5 f1 \[Mu]2^2,b2 b5 f1 \[Mu]2^2,b1 b2 b5 f1 \[Mu]2^2,b5^2 f1 \[Mu]2^2,b1 b5^2 f1 \[Mu]2^2,b1^2 f1^2 \[Mu]2^2,b1^3 f1^2 \[Mu]2^2,
+b1 b2 f1^2 \[Mu]2^2,b1^2 b2 f1^2 \[Mu]2^2,b2^2 f1^2 \[Mu]2^2,b1 b5 f1^2 \[Mu]2^2,b1^2 b5 f1^2 \[Mu]2^2,b2 b5 f1^2 \[Mu]2^2,b5^2 f1^2 \[Mu]2^2,
+b1 f1^2 \[Mu]1^2 \[Mu]2^2,b1^2 f1^2 \[Mu]1^2 \[Mu]2^2,b1^3 f1^2 \[Mu]1^2 \[Mu]2^2,b2 f1^2 \[Mu]1^2 \[Mu]2^2,b1 b2 f1^2 \[Mu]1^2 \[Mu]2^2,
+b1^2 b2 f1^2 \[Mu]1^2 \[Mu]2^2,b2^2 f1^2 \[Mu]1^2 \[Mu]2^2,b5 f1^2 \[Mu]1^2 \[Mu]2^2,b1 b5 f1^2 \[Mu]1^2 \[Mu]2^2,b1^2 b5 f1^2 \[Mu]1^2 \[Mu]2^2,
+b2 b5 f1^2 \[Mu]1^2 \[Mu]2^2,b5^2 f1^2 \[Mu]1^2 \[Mu]2^2,b1 f1^3 \[Mu]1^2 \[Mu]2^2,b1^2 f1^3 \[Mu]1^2 \[Mu]2^2,b1^3 f1^3 \[Mu]1^2 \[Mu]2^2,
+b2 f1^3 \[Mu]1^2 \[Mu]2^2,b1 b2 f1^3 \[Mu]1^2 \[Mu]2^2,b5 f1^3 \[Mu]1^2 \[Mu]2^2,b1 b5 f1^3 \[Mu]1^2 \[Mu]2^2,b1 f1^4 \[Mu]1^2 \[Mu]2^2,b1^2 f1^4 \[Mu]1^2 \[Mu]2^2,
+b2 f1^4 \[Mu]1^2 \[Mu]2^2,b5 f1^4 \[Mu]1^2 \[Mu]2^2,f1^3 \[Mu]1^4 \[Mu]2^2,b1 f1^3 \[Mu]1^4 \[Mu]2^2,b1^2 f1^3 \[Mu]1^4 \[Mu]2^2,b1^3 f1^3 \[Mu]1^4 \[Mu]2^2,
+b2 f1^3 \[Mu]1^4 \[Mu]2^2,b1 b2 f1^3 \[Mu]1^4 \[Mu]2^2,b5 f1^3 \[Mu]1^4 \[Mu]2^2,b1 b5 f1^3 \[Mu]1^4 \[Mu]2^2,f1^4 \[Mu]1^4 \[Mu]2^2,b1 f1^4 \[Mu]1^4 \[Mu]2^2,
+b1^2 f1^4 \[Mu]1^4 \[Mu]2^2,b2 f1^4 \[Mu]1^4 \[Mu]2^2,b5 f1^4 \[Mu]1^4 \[Mu]2^2,f1^5 \[Mu]1^4 \[Mu]2^2,b1 f1^5 \[Mu]1^4 \[Mu]2^2,f1^6 \[Mu]1^4 \[Mu]2^2,
+f1^4 \[Mu]1^6 \[Mu]2^2,b1 f1^4 \[Mu]1^6 \[Mu]2^2,b1^2 f1^4 \[Mu]1^6 \[Mu]2^2,b2 f1^4 \[Mu]1^6 \[Mu]2^2,b5 f1^4 \[Mu]1^6 \[Mu]2^2,f1^5 \[Mu]1^6 \[Mu]2^2,
+b1 f1^5 \[Mu]1^6 \[Mu]2^2,f1^6 \[Mu]1^6 \[Mu]2^2,f1^5 \[Mu]1^8 \[Mu]2^2,b1 f1^5 \[Mu]1^8 \[Mu]2^2,f1^6 \[Mu]1^8 \[Mu]2^2,f1^6 \[Mu]1^10 \[Mu]2^2,b1 f1^2 \[Mu]1 \[Mu]2^3,
+b1^2 f1^2 \[Mu]1 \[Mu]2^3,b1^3 f1^2 \[Mu]1 \[Mu]2^3,b2 f1^2 \[Mu]1 \[Mu]2^3,b1 b2 f1^2 \[Mu]1 \[Mu]2^3,b1^2 b2 f1^2 \[Mu]1 \[Mu]2^3,b2^2 f1^2 \[Mu]1 \[Mu]2^3,
+b5 f1^2 \[Mu]1 \[Mu]2^3,b1 b5 f1^2 \[Mu]1 \[Mu]2^3,b1^2 b5 f1^2 \[Mu]1 \[Mu]2^3,b2 b5 f1^2 \[Mu]1 \[Mu]2^3,b5^2 f1^2 \[Mu]1 \[Mu]2^3,b1 f1^3 \[Mu]1 \[Mu]2^3,
+b1^2 f1^3 \[Mu]1 \[Mu]2^3,b1^3 f1^3 \[Mu]1 \[Mu]2^3,b2 f1^3 \[Mu]1 \[Mu]2^3,b1 b2 f1^3 \[Mu]1 \[Mu]2^3,b5 f1^3 \[Mu]1 \[Mu]2^3,b1 b5 f1^3 \[Mu]1 \[Mu]2^3,
+b1 f1^4 \[Mu]1 \[Mu]2^3,b1^2 f1^4 \[Mu]1 \[Mu]2^3,b2 f1^4 \[Mu]1 \[Mu]2^3,b5 f1^4 \[Mu]1 \[Mu]2^3,f1^3 \[Mu]1^3 \[Mu]2^3,b1 f1^3 \[Mu]1^3 \[Mu]2^3,
+b1^2 f1^3 \[Mu]1^3 \[Mu]2^3,b1^3 f1^3 \[Mu]1^3 \[Mu]2^3,b2 f1^3 \[Mu]1^3 \[Mu]2^3,b1 b2 f1^3 \[Mu]1^3 \[Mu]2^3,b5 f1^3 \[Mu]1^3 \[Mu]2^3,b1 b5 f1^3 \[Mu]1^3 \[Mu]2^3,
+f1^4 \[Mu]1^3 \[Mu]2^3,b1 f1^4 \[Mu]1^3 \[Mu]2^3,b1^2 f1^4 \[Mu]1^3 \[Mu]2^3,b2 f1^4 \[Mu]1^3 \[Mu]2^3,b5 f1^4 \[Mu]1^3 \[Mu]2^3,f1^5 \[Mu]1^3 \[Mu]2^3,
+b1 f1^5 \[Mu]1^3 \[Mu]2^3,f1^6 \[Mu]1^3 \[Mu]2^3,f1^4 \[Mu]1^5 \[Mu]2^3,b1 f1^4 \[Mu]1^5 \[Mu]2^3,b1^2 f1^4 \[Mu]1^5 \[Mu]2^3,b2 f1^4 \[Mu]1^5 \[Mu]2^3,
+b5 f1^4 \[Mu]1^5 \[Mu]2^3,f1^5 \[Mu]1^5 \[Mu]2^3,b1 f1^5 \[Mu]1^5 \[Mu]2^3,f1^6 \[Mu]1^5 \[Mu]2^3,f1^5 \[Mu]1^7 \[Mu]2^3,b1 f1^5 \[Mu]1^7 \[Mu]2^3,
+f1^6 \[Mu]1^7 \[Mu]2^3,f1^6 \[Mu]1^9 \[Mu]2^3,b1 f1^2 \[Mu]2^4,b1^2 f1^2 \[Mu]2^4,b1^3 f1^2 \[Mu]2^4,b2 f1^2 \[Mu]2^4,b1 b2 f1^2 \[Mu]2^4,
+b1^2 b2 f1^2 \[Mu]2^4,b2^2 f1^2 \[Mu]2^4,b5 f1^2 \[Mu]2^4,b1 b5 f1^2 \[Mu]2^4,b1^2 b5 f1^2 \[Mu]2^4,b2 b5 f1^2 \[Mu]2^4,b5^2 f1^2 \[Mu]2^4,
+b1 f1^3 \[Mu]2^4,b1^2 f1^3 \[Mu]2^4,b2 f1^3 \[Mu]2^4,b1 b2 f1^3 \[Mu]2^4,b5 f1^3 \[Mu]2^4,b1 b5 f1^3 \[Mu]2^4,b1 f1^4 \[Mu]2^4,b2 f1^4 \[Mu]2^4,
+b5 f1^4 \[Mu]2^4,f1^3 \[Mu]1^2 \[Mu]2^4,b1 f1^3 \[Mu]1^2 \[Mu]2^4,b1^2 f1^3 \[Mu]1^2 \[Mu]2^4,b1^3 f1^3 \[Mu]1^2 \[Mu]2^4,b2 f1^3 \[Mu]1^2 \[Mu]2^4,
+b1 b2 f1^3 \[Mu]1^2 \[Mu]2^4,b5 f1^3 \[Mu]1^2 \[Mu]2^4,b1 b5 f1^3 \[Mu]1^2 \[Mu]2^4,f1^4 \[Mu]1^2 \[Mu]2^4,b1 f1^4 \[Mu]1^2 \[Mu]2^4,b1^2 f1^4 \[Mu]1^2 \[Mu]2^4,
+b2 f1^4 \[Mu]1^2 \[Mu]2^4,b5 f1^4 \[Mu]1^2 \[Mu]2^4,f1^5 \[Mu]1^2 \[Mu]2^4,b1 f1^5 \[Mu]1^2 \[Mu]2^4,f1^6 \[Mu]1^2 \[Mu]2^4,f1^4 \[Mu]1^4 \[Mu]2^4,b1 f1^4 \[Mu]1^4 \[Mu]2^4,
+b1^2 f1^4 \[Mu]1^4 \[Mu]2^4,b2 f1^4 \[Mu]1^4 \[Mu]2^4,b5 f1^4 \[Mu]1^4 \[Mu]2^4,f1^5 \[Mu]1^4 \[Mu]2^4,b1 f1^5 \[Mu]1^4 \[Mu]2^4,f1^6 \[Mu]1^4 \[Mu]2^4,f1^5 \[Mu]1^6 \[Mu]2^4,
+b1 f1^5 \[Mu]1^6 \[Mu]2^4,f1^6 \[Mu]1^6 \[Mu]2^4,f1^6 \[Mu]1^8 \[Mu]2^4,b1 f1^3 \[Mu]1 \[Mu]2^5,b1^2 f1^3 \[Mu]1 \[Mu]2^5,b1^3 f1^3 \[Mu]1 \[Mu]2^5,b2 f1^3 \[Mu]1 \[Mu]2^5,
+b1 b2 f1^3 \[Mu]1 \[Mu]2^5,b5 f1^3 \[Mu]1 \[Mu]2^5,b1 b5 f1^3 \[Mu]1 \[Mu]2^5,b1 f1^4 \[Mu]1 \[Mu]2^5,b1^2 f1^4 \[Mu]1 \[Mu]2^5,b2 f1^4 \[Mu]1 \[Mu]2^5,b5 f1^4 \[Mu]1 \[Mu]2^5,
+b1 f1^5 \[Mu]1 \[Mu]2^5,f1^4 \[Mu]1^3 \[Mu]2^5,b1 f1^4 \[Mu]1^3 \[Mu]2^5,b1^2 f1^4 \[Mu]1^3 \[Mu]2^5,b2 f1^4 \[Mu]1^3 \[Mu]2^5,b5 f1^4 \[Mu]1^3 \[Mu]2^5,f1^5 \[Mu]1^3 \[Mu]2^5,
+b1 f1^5 \[Mu]1^3 \[Mu]2^5,f1^6 \[Mu]1^3 \[Mu]2^5,f1^5 \[Mu]1^5 \[Mu]2^5,b1 f1^5 \[Mu]1^5 \[Mu]2^5,f1^6 \[Mu]1^5 \[Mu]2^5,f1^6 \[Mu]1^7 \[Mu]2^5,b1 f1^3 \[Mu]2^6,
+b1^2 f1^3 \[Mu]2^6,b2 f1^3 \[Mu]2^6,b1 b2 f1^3 \[Mu]2^6,b5 f1^3 \[Mu]2^6,b1 b5 f1^3 \[Mu]2^6,b1 f1^4 \[Mu]2^6,b2 f1^4 \[Mu]2^6,b5 f1^4 \[Mu]2^6,
+f1^4 \[Mu]1^2 \[Mu]2^6,b1 f1^4 \[Mu]1^2 \[Mu]2^6,b1^2 f1^4 \[Mu]1^2 \[Mu]2^6,b2 f1^4 \[Mu]1^2 \[Mu]2^6,b5 f1^4 \[Mu]1^2 \[Mu]2^6,f1^5 \[Mu]1^2 \[Mu]2^6,b1 f1^5 \[Mu]1^2 \[Mu]2^6,
+f1^6 \[Mu]1^2 \[Mu]2^6,f1^5 \[Mu]1^4 \[Mu]2^6,b1 f1^5 \[Mu]1^4 \[Mu]2^6,f1^6 \[Mu]1^4 \[Mu]2^6,f1^6 \[Mu]1^6 \[Mu]2^6,b1 f1^4 \[Mu]1 \[Mu]2^7,b1^2 f1^4 \[Mu]1 \[Mu]2^7,
+b2 f1^4 \[Mu]1 \[Mu]2^7,b5 f1^4 \[Mu]1 \[Mu]2^7,b1 f1^5 \[Mu]1 \[Mu]2^7,f1^5 \[Mu]1^3 \[Mu]2^7,b1 f1^5 \[Mu]1^3 \[Mu]2^7,f1^6 \[Mu]1^3 \[Mu]2^7,f1^6 \[Mu]1^5 \[Mu]2^7,
+b1 f1^4 \[Mu]2^8,b2 f1^4 \[Mu]2^8,b5 f1^4 \[Mu]2^8,f1^5 \[Mu]1^2 \[Mu]2^8,b1 f1^5 \[Mu]1^2 \[Mu]2^8,f1^6 \[Mu]1^2 \[Mu]2^8,f1^6 \[Mu]1^4 \[Mu]2^8,b1 f1^5 \[Mu]1 \[Mu]2^9,
+f1^6 \[Mu]1^3 \[Mu]2^9,f1^6 \[Mu]1^2 \[Mu]2^10};
 
 
-(* ::Input:: *)
-(*(*Get all bias monomials that appear in the b222 kernel*)*)
-(*(**)
-(*b222biaslistpart1=getMonomials[b222vars,b222part1ctab];*)
-(*b222biaslistpart23=getMonomials[b222vars,b222part23ctab];*)
-(*b222biaslist=Union[b222biaslistpart1,b222biaslistpart23];*)
-(**)*)
+(*Export[LoopTablesPath<>"B222simpcoefslist.m",b222biaslist]*)
 
 
-(* ::Input:: *)
-(*b222biaslist={b1^3,b1^2 b2,b1 b2^2,b2^3,b1^2 b5,b1 b2 b5,b2^2 b5,b1 b5^2,b2 b5^2,b5^3,b1^2 f1 \[Mu]1^2,b1^3 f1 \[Mu]1^2,b1 b2 f1 \[Mu]1^2,b1^2 b2 f1 \[Mu]1^2,b2^2 f1 \[Mu]1^2,b1 b2^2 f1 \[Mu]1^2,b1 b5 f1 \[Mu]1^2,b1^2 b5 f1 \[Mu]1^2,b2 b5 f1 \[Mu]1^2,b1 b2 b5 f1 \[Mu]1^2,b5^2 f1 \[Mu]1^2,b1 b5^2 f1 \[Mu]1^2,b1^2 f1^2 \[Mu]1^2,b1^3 f1^2 \[Mu]1^2,b1 b2 f1^2 \[Mu]1^2,b1^2 b2 f1^2 \[Mu]1^2,b2^2 f1^2 \[Mu]1^2,b1 b5 f1^2 \[Mu]1^2,b1^2 b5 f1^2 \[Mu]1^2,b2 b5 f1^2 \[Mu]1^2,b5^2 f1^2 \[Mu]1^2,b1 f1^2 \[Mu]1^4,b1^2 f1^2 \[Mu]1^4,b1^3 f1^2 \[Mu]1^4,b2 f1^2 \[Mu]1^4,b1 b2 f1^2 \[Mu]1^4,b1^2 b2 f1^2 \[Mu]1^4,b2^2 f1^2 \[Mu]1^4,b5 f1^2 \[Mu]1^4,b1 b5 f1^2 \[Mu]1^4,b1^2 b5 f1^2 \[Mu]1^4,b2 b5 f1^2 \[Mu]1^4,b5^2 f1^2 \[Mu]1^4,b1 f1^3 \[Mu]1^4,b1^2 f1^3 \[Mu]1^4,b2 f1^3 \[Mu]1^4,b1 b2 f1^3 \[Mu]1^4,b5 f1^3 \[Mu]1^4,b1 b5 f1^3 \[Mu]1^4,b1 f1^4 \[Mu]1^4,b2 f1^4 \[Mu]1^4,b5 f1^4 \[Mu]1^4,b1 f1^3 \[Mu]1^6,b1^2 f1^3 \[Mu]1^6,b2 f1^3 \[Mu]1^6,b1 b2 f1^3 \[Mu]1^6,b5 f1^3 \[Mu]1^6,b1 b5 f1^3 \[Mu]1^6,b1 f1^4 \[Mu]1^6,b2 f1^4 \[Mu]1^6,b5 f1^4 \[Mu]1^6,b1 f1^4 \[Mu]1^8,b2 f1^4 \[Mu]1^8,b5 f1^4 \[Mu]1^8,b1^2 f1 \[Mu]1 \[Mu]2,b1^3 f1 \[Mu]1 \[Mu]2,b1 b2 f1 \[Mu]1 \[Mu]2,b1^2 b2 f1 \[Mu]1 \[Mu]2,b2^2 f1 \[Mu]1 \[Mu]2,b1 b2^2 f1 \[Mu]1 \[Mu]2,b1 b5 f1 \[Mu]1 \[Mu]2,b1^2 b5 f1 \[Mu]1 \[Mu]2,b2 b5 f1 \[Mu]1 \[Mu]2,b1 b2 b5 f1 \[Mu]1 \[Mu]2,b5^2 f1 \[Mu]1 \[Mu]2,b1 b5^2 f1 \[Mu]1 \[Mu]2,b1^2 f1^2 \[Mu]1 \[Mu]2,b1^3 f1^2 \[Mu]1 \[Mu]2,b1 b2 f1^2 \[Mu]1 \[Mu]2,b1^2 b2 f1^2 \[Mu]1 \[Mu]2,b2^2 f1^2 \[Mu]1 \[Mu]2,b1 b5 f1^2 \[Mu]1 \[Mu]2,b1^2 b5 f1^2 \[Mu]1 \[Mu]2,b2 b5 f1^2 \[Mu]1 \[Mu]2,b5^2 f1^2 \[Mu]1 \[Mu]2,b1 f1^2 \[Mu]1^3 \[Mu]2,b1^2 f1^2 \[Mu]1^3 \[Mu]2,b1^3 f1^2 \[Mu]1^3 \[Mu]2,b2 f1^2 \[Mu]1^3 \[Mu]2,b1 b2 f1^2 \[Mu]1^3 \[Mu]2,b1^2 b2 f1^2 \[Mu]1^3 \[Mu]2,b2^2 f1^2 \[Mu]1^3 \[Mu]2,b5 f1^2 \[Mu]1^3 \[Mu]2,b1 b5 f1^2 \[Mu]1^3 \[Mu]2,b1^2 b5 f1^2 \[Mu]1^3 \[Mu]2,b2 b5 f1^2 \[Mu]1^3 \[Mu]2,b5^2 f1^2 \[Mu]1^3 \[Mu]2,b1 f1^3 \[Mu]1^3 \[Mu]2,b1^2 f1^3 \[Mu]1^3 \[Mu]2,b1^3 f1^3 \[Mu]1^3 \[Mu]2,b2 f1^3 \[Mu]1^3 \[Mu]2,b1 b2 f1^3 \[Mu]1^3 \[Mu]2,b5 f1^3 \[Mu]1^3 \[Mu]2,b1 b5 f1^3 \[Mu]1^3 \[Mu]2,b1 f1^4 \[Mu]1^3 \[Mu]2,b1^2 f1^4 \[Mu]1^3 \[Mu]2,b2 f1^4 \[Mu]1^3 \[Mu]2,b5 f1^4 \[Mu]1^3 \[Mu]2,b1 f1^3 \[Mu]1^5 \[Mu]2,b1^2 f1^3 \[Mu]1^5 \[Mu]2,b1^3 f1^3 \[Mu]1^5 \[Mu]2,b2 f1^3 \[Mu]1^5 \[Mu]2,b1 b2 f1^3 \[Mu]1^5 \[Mu]2,b5 f1^3 \[Mu]1^5 \[Mu]2,b1 b5 f1^3 \[Mu]1^5 \[Mu]2,b1 f1^4 \[Mu]1^5 \[Mu]2,b1^2 f1^4 \[Mu]1^5 \[Mu]2,b2 f1^4 \[Mu]1^5 \[Mu]2,b5 f1^4 \[Mu]1^5 \[Mu]2,b1 f1^5 \[Mu]1^5 \[Mu]2,b1 f1^4 \[Mu]1^7 \[Mu]2,b1^2 f1^4 \[Mu]1^7 \[Mu]2,b2 f1^4 \[Mu]1^7 \[Mu]2,b5 f1^4 \[Mu]1^7 \[Mu]2,b1 f1^5 \[Mu]1^7 \[Mu]2,b1 f1^5 \[Mu]1^9 \[Mu]2,b1^2 f1 \[Mu]2^2,b1^3 f1 \[Mu]2^2,b1 b2 f1 \[Mu]2^2,b1^2 b2 f1 \[Mu]2^2,b2^2 f1 \[Mu]2^2,b1 b2^2 f1 \[Mu]2^2,b1 b5 f1 \[Mu]2^2,b1^2 b5 f1 \[Mu]2^2,b2 b5 f1 \[Mu]2^2,b1 b2 b5 f1 \[Mu]2^2,b5^2 f1 \[Mu]2^2,b1 b5^2 f1 \[Mu]2^2,b1^2 f1^2 \[Mu]2^2,b1^3 f1^2 \[Mu]2^2,b1 b2 f1^2 \[Mu]2^2,b1^2 b2 f1^2 \[Mu]2^2,b2^2 f1^2 \[Mu]2^2,b1 b5 f1^2 \[Mu]2^2,b1^2 b5 f1^2 \[Mu]2^2,b2 b5 f1^2 \[Mu]2^2,b5^2 f1^2 \[Mu]2^2,b1 f1^2 \[Mu]1^2 \[Mu]2^2,b1^2 f1^2 \[Mu]1^2 \[Mu]2^2,b1^3 f1^2 \[Mu]1^2 \[Mu]2^2,b2 f1^2 \[Mu]1^2 \[Mu]2^2,b1 b2 f1^2 \[Mu]1^2 \[Mu]2^2,b1^2 b2 f1^2 \[Mu]1^2 \[Mu]2^2,b2^2 f1^2 \[Mu]1^2 \[Mu]2^2,b5 f1^2 \[Mu]1^2 \[Mu]2^2,b1 b5 f1^2 \[Mu]1^2 \[Mu]2^2,b1^2 b5 f1^2 \[Mu]1^2 \[Mu]2^2,b2 b5 f1^2 \[Mu]1^2 \[Mu]2^2,b5^2 f1^2 \[Mu]1^2 \[Mu]2^2,b1 f1^3 \[Mu]1^2 \[Mu]2^2,b1^2 f1^3 \[Mu]1^2 \[Mu]2^2,b1^3 f1^3 \[Mu]1^2 \[Mu]2^2,b2 f1^3 \[Mu]1^2 \[Mu]2^2,b1 b2 f1^3 \[Mu]1^2 \[Mu]2^2,b5 f1^3 \[Mu]1^2 \[Mu]2^2,b1 b5 f1^3 \[Mu]1^2 \[Mu]2^2,b1 f1^4 \[Mu]1^2 \[Mu]2^2,b1^2 f1^4 \[Mu]1^2 \[Mu]2^2,b2 f1^4 \[Mu]1^2 \[Mu]2^2,b5 f1^4 \[Mu]1^2 \[Mu]2^2,f1^3 \[Mu]1^4 \[Mu]2^2,b1 f1^3 \[Mu]1^4 \[Mu]2^2,b1^2 f1^3 \[Mu]1^4 \[Mu]2^2,b1^3 f1^3 \[Mu]1^4 \[Mu]2^2,b2 f1^3 \[Mu]1^4 \[Mu]2^2,b1 b2 f1^3 \[Mu]1^4 \[Mu]2^2,b5 f1^3 \[Mu]1^4 \[Mu]2^2,b1 b5 f1^3 \[Mu]1^4 \[Mu]2^2,f1^4 \[Mu]1^4 \[Mu]2^2,b1 f1^4 \[Mu]1^4 \[Mu]2^2,b1^2 f1^4 \[Mu]1^4 \[Mu]2^2,b2 f1^4 \[Mu]1^4 \[Mu]2^2,b5 f1^4 \[Mu]1^4 \[Mu]2^2,f1^5 \[Mu]1^4 \[Mu]2^2,b1 f1^5 \[Mu]1^4 \[Mu]2^2,f1^6 \[Mu]1^4 \[Mu]2^2,f1^4 \[Mu]1^6 \[Mu]2^2,b1 f1^4 \[Mu]1^6 \[Mu]2^2,b1^2 f1^4 \[Mu]1^6 \[Mu]2^2,b2 f1^4 \[Mu]1^6 \[Mu]2^2,b5 f1^4 \[Mu]1^6 \[Mu]2^2,f1^5 \[Mu]1^6 \[Mu]2^2,b1 f1^5 \[Mu]1^6 \[Mu]2^2,f1^6 \[Mu]1^6 \[Mu]2^2,f1^5 \[Mu]1^8 \[Mu]2^2,b1 f1^5 \[Mu]1^8 \[Mu]2^2,f1^6 \[Mu]1^8 \[Mu]2^2,f1^6 \[Mu]1^10 \[Mu]2^2,b1 f1^2 \[Mu]1 \[Mu]2^3,b1^2 f1^2 \[Mu]1 \[Mu]2^3,b1^3 f1^2 \[Mu]1 \[Mu]2^3,b2 f1^2 \[Mu]1 \[Mu]2^3,b1 b2 f1^2 \[Mu]1 \[Mu]2^3,b1^2 b2 f1^2 \[Mu]1 \[Mu]2^3,b2^2 f1^2 \[Mu]1 \[Mu]2^3,b5 f1^2 \[Mu]1 \[Mu]2^3,b1 b5 f1^2 \[Mu]1 \[Mu]2^3,b1^2 b5 f1^2 \[Mu]1 \[Mu]2^3,b2 b5 f1^2 \[Mu]1 \[Mu]2^3,b5^2 f1^2 \[Mu]1 \[Mu]2^3,b1 f1^3 \[Mu]1 \[Mu]2^3,b1^2 f1^3 \[Mu]1 \[Mu]2^3,b1^3 f1^3 \[Mu]1 \[Mu]2^3,b2 f1^3 \[Mu]1 \[Mu]2^3,b1 b2 f1^3 \[Mu]1 \[Mu]2^3,b5 f1^3 \[Mu]1 \[Mu]2^3,b1 b5 f1^3 \[Mu]1 \[Mu]2^3,b1 f1^4 \[Mu]1 \[Mu]2^3,b1^2 f1^4 \[Mu]1 \[Mu]2^3,b2 f1^4 \[Mu]1 \[Mu]2^3,b5 f1^4 \[Mu]1 \[Mu]2^3,f1^3 \[Mu]1^3 \[Mu]2^3,b1 f1^3 \[Mu]1^3 \[Mu]2^3,b1^2 f1^3 \[Mu]1^3 \[Mu]2^3,b1^3 f1^3 \[Mu]1^3 \[Mu]2^3,b2 f1^3 \[Mu]1^3 \[Mu]2^3,b1 b2 f1^3 \[Mu]1^3 \[Mu]2^3,b5 f1^3 \[Mu]1^3 \[Mu]2^3,b1 b5 f1^3 \[Mu]1^3 \[Mu]2^3,f1^4 \[Mu]1^3 \[Mu]2^3,b1 f1^4 \[Mu]1^3 \[Mu]2^3,b1^2 f1^4 \[Mu]1^3 \[Mu]2^3,b2 f1^4 \[Mu]1^3 \[Mu]2^3,b5 f1^4 \[Mu]1^3 \[Mu]2^3,f1^5 \[Mu]1^3 \[Mu]2^3,b1 f1^5 \[Mu]1^3 \[Mu]2^3,f1^6 \[Mu]1^3 \[Mu]2^3,f1^4 \[Mu]1^5 \[Mu]2^3,b1 f1^4 \[Mu]1^5 \[Mu]2^3,b1^2 f1^4 \[Mu]1^5 \[Mu]2^3,b2 f1^4 \[Mu]1^5 \[Mu]2^3,b5 f1^4 \[Mu]1^5 \[Mu]2^3,f1^5 \[Mu]1^5 \[Mu]2^3,b1 f1^5 \[Mu]1^5 \[Mu]2^3,f1^6 \[Mu]1^5 \[Mu]2^3,f1^5 \[Mu]1^7 \[Mu]2^3,b1 f1^5 \[Mu]1^7 \[Mu]2^3,f1^6 \[Mu]1^7 \[Mu]2^3,f1^6 \[Mu]1^9 \[Mu]2^3,b1 f1^2 \[Mu]2^4,b1^2 f1^2 \[Mu]2^4,b1^3 f1^2 \[Mu]2^4,b2 f1^2 \[Mu]2^4,b1 b2 f1^2 \[Mu]2^4,b1^2 b2 f1^2 \[Mu]2^4,b2^2 f1^2 \[Mu]2^4,b5 f1^2 \[Mu]2^4,b1 b5 f1^2 \[Mu]2^4,b1^2 b5 f1^2 \[Mu]2^4,b2 b5 f1^2 \[Mu]2^4,b5^2 f1^2 \[Mu]2^4,b1 f1^3 \[Mu]2^4,b1^2 f1^3 \[Mu]2^4,b2 f1^3 \[Mu]2^4,b1 b2 f1^3 \[Mu]2^4,b5 f1^3 \[Mu]2^4,b1 b5 f1^3 \[Mu]2^4,b1 f1^4 \[Mu]2^4,b2 f1^4 \[Mu]2^4,b5 f1^4 \[Mu]2^4,f1^3 \[Mu]1^2 \[Mu]2^4,b1 f1^3 \[Mu]1^2 \[Mu]2^4,b1^2 f1^3 \[Mu]1^2 \[Mu]2^4,b1^3 f1^3 \[Mu]1^2 \[Mu]2^4,b2 f1^3 \[Mu]1^2 \[Mu]2^4,b1 b2 f1^3 \[Mu]1^2 \[Mu]2^4,b5 f1^3 \[Mu]1^2 \[Mu]2^4,b1 b5 f1^3 \[Mu]1^2 \[Mu]2^4,f1^4 \[Mu]1^2 \[Mu]2^4,b1 f1^4 \[Mu]1^2 \[Mu]2^4,b1^2 f1^4 \[Mu]1^2 \[Mu]2^4,b2 f1^4 \[Mu]1^2 \[Mu]2^4,b5 f1^4 \[Mu]1^2 \[Mu]2^4,f1^5 \[Mu]1^2 \[Mu]2^4,b1 f1^5 \[Mu]1^2 \[Mu]2^4,f1^6 \[Mu]1^2 \[Mu]2^4,f1^4 \[Mu]1^4 \[Mu]2^4,b1 f1^4 \[Mu]1^4 \[Mu]2^4,b1^2 f1^4 \[Mu]1^4 \[Mu]2^4,b2 f1^4 \[Mu]1^4 \[Mu]2^4,b5 f1^4 \[Mu]1^4 \[Mu]2^4,f1^5 \[Mu]1^4 \[Mu]2^4,b1 f1^5 \[Mu]1^4 \[Mu]2^4,f1^6 \[Mu]1^4 \[Mu]2^4,f1^5 \[Mu]1^6 \[Mu]2^4,b1 f1^5 \[Mu]1^6 \[Mu]2^4,f1^6 \[Mu]1^6 \[Mu]2^4,f1^6 \[Mu]1^8 \[Mu]2^4,b1 f1^3 \[Mu]1 \[Mu]2^5,b1^2 f1^3 \[Mu]1 \[Mu]2^5,b1^3 f1^3 \[Mu]1 \[Mu]2^5,b2 f1^3 \[Mu]1 \[Mu]2^5,b1 b2 f1^3 \[Mu]1 \[Mu]2^5,b5 f1^3 \[Mu]1 \[Mu]2^5,b1 b5 f1^3 \[Mu]1 \[Mu]2^5,b1 f1^4 \[Mu]1 \[Mu]2^5,b1^2 f1^4 \[Mu]1 \[Mu]2^5,b2 f1^4 \[Mu]1 \[Mu]2^5,b5 f1^4 \[Mu]1 \[Mu]2^5,b1 f1^5 \[Mu]1 \[Mu]2^5,f1^4 \[Mu]1^3 \[Mu]2^5,b1 f1^4 \[Mu]1^3 \[Mu]2^5,b1^2 f1^4 \[Mu]1^3 \[Mu]2^5,b2 f1^4 \[Mu]1^3 \[Mu]2^5,b5 f1^4 \[Mu]1^3 \[Mu]2^5,f1^5 \[Mu]1^3 \[Mu]2^5,b1 f1^5 \[Mu]1^3 \[Mu]2^5,f1^6 \[Mu]1^3 \[Mu]2^5,f1^5 \[Mu]1^5 \[Mu]2^5,b1 f1^5 \[Mu]1^5 \[Mu]2^5,f1^6 \[Mu]1^5 \[Mu]2^5,f1^6 \[Mu]1^7 \[Mu]2^5,b1 f1^3 \[Mu]2^6,b1^2 f1^3 \[Mu]2^6,b2 f1^3 \[Mu]2^6,b1 b2 f1^3 \[Mu]2^6,b5 f1^3 \[Mu]2^6,b1 b5 f1^3 \[Mu]2^6,b1 f1^4 \[Mu]2^6,b2 f1^4 \[Mu]2^6,b5 f1^4 \[Mu]2^6,f1^4 \[Mu]1^2 \[Mu]2^6,b1 f1^4 \[Mu]1^2 \[Mu]2^6,b1^2 f1^4 \[Mu]1^2 \[Mu]2^6,b2 f1^4 \[Mu]1^2 \[Mu]2^6,b5 f1^4 \[Mu]1^2 \[Mu]2^6,f1^5 \[Mu]1^2 \[Mu]2^6,b1 f1^5 \[Mu]1^2 \[Mu]2^6,f1^6 \[Mu]1^2 \[Mu]2^6,f1^5 \[Mu]1^4 \[Mu]2^6,b1 f1^5 \[Mu]1^4 \[Mu]2^6,f1^6 \[Mu]1^4 \[Mu]2^6,f1^6 \[Mu]1^6 \[Mu]2^6,b1 f1^4 \[Mu]1 \[Mu]2^7,b1^2 f1^4 \[Mu]1 \[Mu]2^7,b2 f1^4 \[Mu]1 \[Mu]2^7,b5 f1^4 \[Mu]1 \[Mu]2^7,b1 f1^5 \[Mu]1 \[Mu]2^7,f1^5 \[Mu]1^3 \[Mu]2^7,b1 f1^5 \[Mu]1^3 \[Mu]2^7,f1^6 \[Mu]1^3 \[Mu]2^7,f1^6 \[Mu]1^5 \[Mu]2^7,b1 f1^4 \[Mu]2^8,b2 f1^4 \[Mu]2^8,b5 f1^4 \[Mu]2^8,f1^5 \[Mu]1^2 \[Mu]2^8,b1 f1^5 \[Mu]1^2 \[Mu]2^8,f1^6 \[Mu]1^2 \[Mu]2^8,f1^6 \[Mu]1^4 \[Mu]2^8,b1 f1^5 \[Mu]1 \[Mu]2^9,f1^6 \[Mu]1^3 \[Mu]2^9,f1^6 \[Mu]1^2 \[Mu]2^10};*)
-
-
-Export[LoopTablesPath<>"B222simpcoefslist.m",b222biaslist]
-
-
-(* ::Input:: *)
-(*(*Function that obtains the coefficient of each term in biaslist in each ctab coefficient "coef" *)*)
-(*b222biaslister=biaslisterfn[b222vars,b222biaslist];*)
+(*Function that obtains the coefficient of each term in biaslist in each ctab coefficient "coef" *)
+b222biaslister=biaslisterfn[b222vars,b222biaslist];
 
 
 (* ::Input:: *)
@@ -1681,33 +1730,29 @@ Export[LoopTablesPath<>"B222simpcoefslist.m",b222biaslist]
 
 (*b222part1ctabdec=<<(LoopTablesPath<>"b222mu0to4ctabdec.mx");*)
 b222part1ctabdec = Import[AuxPath<>"b222mu0to4ctabdec.m"];
+b222\[Mu]0to4ctabdec[k1_,k2_,k3_]=b222part1ctabdec;
 
 
-(* ::Input:: *)
-(*b222\[Mu]0to4ctabdec[k1_,k2_,k3_]=b222part1ctabdec;*)
+(*apply decomposition in biases to all ctab coefficients*)
+b222\[Mu]56ctabdec[k1_,k2_,k3_]:=Module[{b222ctabtemp,b222exps,b222coeflist},
+b222ctabtemp=b222\[Mu]56ctab[k1,k2,k3];
+b222exps=b222ctabtemp[[All,1;;3]];
+b222coeflist=b222biaslister/@b222ctabtemp[[All,4]];
+MapThread[Append,{b222exps,b222coeflist}]
+];
+(*combine everything*)
+b222ctabdec[k1_,k2_,k3_]:=compressor[Join[b222\[Mu]0to4ctabdec[k1,k2,k3],b222\[Mu]56ctabdec[k1,k2,k3]]];
 
 
-(* ::Input:: *)
-(*(*apply decomposition in biases to all ctab coefficients*)*)
-(*b222\[Mu]56ctabdec[k1_,k2_,k3_]:=Module[{b222ctabtemp,b222exps,b222coeflist},*)
-(*b222ctabtemp=b222\[Mu]56ctab[k1,k2,k3];*)
-(*b222exps=b222ctabtemp[[All,1;;3]];*)
-(*b222coeflist=b222biaslister/@b222ctabtemp[[All,4]];*)
-(*MapThread[Append,{b222exps,b222coeflist}]*)
-(*];*)
-
-
-(* ::Input:: *)
-(*(*combine everything*)*)
-(*b222ctabdec[k1_,k2_,k3_]:=compressor[Join[b222\[Mu]0to4ctabdec[k1,k2,k3],b222\[Mu]56ctabdec[k1,k2,k3]]];*)
-
-
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Finally, get list of exponents for b222*)
 
 
 (* ::Input:: *)
 (*ctabexample=b222ctabdec[0.11,0.12,0.13];*)
+
+
+(* ::Input:: *)
 (*b222exps=ctabexample[[All,1;;3]]*)
 
 
@@ -1748,7 +1793,7 @@ Monitor[Do[genb222coef@@baseTriEff[[i]],
 {i,1,Length[baseTriEff]}]//AbsoluteTiming,i];
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*B321 I*)
 
 
@@ -1946,8 +1991,7 @@ Export[LoopTablesPath<>"B3211simppermks.m",b3211permdec]
 b3211permdec=Import[LoopTablesPath<>"B3211simppermks.m"];
 
 
-(* ::Input:: *)
-(*b3211permdecfn[k1_,k2_,k3_]=b3211permdec;*)
+b3211permdecfn[k1_,k2_,k3_]=b3211permdec;
 
 
 (* ::Input:: *)
@@ -1956,29 +2000,25 @@ b3211permdec=Import[LoopTablesPath<>"B3211simppermks.m"];
 (*(*Export[LoopTablesPath<>"B3211ctab.csv",b3211exps];*)*)
 
 
-(* ::Input:: *)
-(*genb3211coef[k1sub_,k2sub_,k3sub_]:=Module[{filepath},*)
-(*filepath=saveLoopCoefPath[{k1sub,k2sub,k3sub},"B3211"];*)
-(*If[Not[FileExistsQ[filepath]],Export[filepath,b3211permdecfn[k1sub,k2sub,k3sub]]]*)
-(*];*)
+genb3211coef[k1sub_,k2sub_,k3sub_]:=Module[{filepath},
+filepath=saveLoopCoefPath[{k1sub,k2sub,k3sub},"B3211"];
+If[Not[FileExistsQ[filepath]],Export[filepath,b3211permdecfn[k1sub,k2sub,k3sub]]]
+];
 
 
-(* ::Input:: *)
-(*Monitor[Do[genb3211coef@@CMASStriEff[[j]],*)
-(*{j,1,Length[CMASStriEff]}],j]*)
+Monitor[Do[genb3211coef@@CMASStriEff[[j]],
+{j,1,Length[CMASStriEff]}],j]
 
 
-(* ::Input:: *)
-(*Monitor[Do[genb3211coef@@LOWZtriEff[[j]],*)
-(*{j,1,Length[LOWZtriEff]}],j]*)
+Monitor[Do[genb3211coef@@LOWZtriEff[[j]],
+{j,1,Length[LOWZtriEff]}],j]
 
 
-(* ::Input:: *)
-(*Monitor[Do[genb3211coef@@baseTriEff[[j]],*)
-(*{j,1,Length[baseTriEff]}],j]*)
+Monitor[Do[genb3211coef@@baseTriEff[[j]],
+{j,1,Length[baseTriEff]}],j]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*B321 II*)
 
 
@@ -2166,42 +2206,36 @@ Export[LoopTablesPath<>"B3212simppermks.m",b3212permdec]
 (*b3212exps={{-2,1,0},{-1,0,0},{-1,1,0},{0,-1,0},{0,0,0},{0,1,0},{1,-2,0},{1,-1,0},{1,0,0},{1,1,0},{2,-2,0},{2,-1,0},{2,0,0},{2,1,0}};*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Generate ctab coefs for fisherPoints*)
 
 
-(* ::Input:: *)
-(*(*b3212permdec=<<(LoopTablesPath<>"B3212coefsPerm.mx");*)*)
-(*b3212permdec=Import[LoopTablesPath<>"B3212simppermks.m"];*)
-(*b3212permdecfn[k1_,k2_,k3_]=b3212permdec;*)
+(*b3212permdec=<<(LoopTablesPath<>"B3212coefsPerm.mx");*)
+b3212permdec=Import[LoopTablesPath<>"B3212simppermks.m"];
+b3212permdecfn[k1_,k2_,k3_]=b3212permdec;
 
 
 (* ::Input:: *)
 (*(*Export ctab exponents*)*)
-(*Export[ctabpath<>"B3212ctab.csv",b3212exps];*)
-(*Export[LoopTablesPath<>"B3212ctab.csv",b3212exps];*)
+(*(*Export[ctabpath<>"B3212ctab.csv",b3212exps];*)
+(*Export[LoopTablesPath<>"B3212ctab.csv",b3212exps];*)*)
 
 
-(* ::Input:: *)
-(*genb3212coef[k1sub_,k2sub_,k3sub_]:=Module[{filepath},*)
-(*filepath=saveLoopCoefPath[{k1sub,k2sub,k3sub},"B3212"];*)
-(*If[Not[FileExistsQ[filepath]],Export[filepath,b3212permdecfn[k1sub,k2sub,k3sub]]]*)
-(*];*)
+genb3212coef[k1sub_,k2sub_,k3sub_]:=Module[{filepath},
+filepath=saveLoopCoefPath[{k1sub,k2sub,k3sub},"B3212"];
+If[Not[FileExistsQ[filepath]],Export[filepath,b3212permdecfn[k1sub,k2sub,k3sub]]]
+];
 
 
-(* ::Input:: *)
-(*Monitor[Do[genb3212coef@@CMASStriEff[[i]],*)
-(*{i,1,Length[CMASStriEff]}],i]*)
+Monitor[Do[genb3212coef@@CMASStriEff[[i]],
+{i,1,Length[CMASStriEff]}],i]
+
+Monitor[Do[genb3212coef@@LOWZtriEff[[i]],
+{i,1,Length[LOWZtriEff]}],i]
 
 
-(* ::Input:: *)
-(*Monitor[Do[genb3212coef@@LOWZtriEff[[i]],*)
-(*{i,1,Length[LOWZtriEff]}],i]*)
-
-
-(* ::Input:: *)
-(*Monitor[Do[genb3212coef@@baseTriEff[[i]],*)
-(*{i,1,Length[baseTriEff]}],i]*)
+Monitor[Do[genb3212coef@@baseTriEff[[i]],
+{i,1,Length[baseTriEff]}],i]
 
 
 (* ::Subsection:: *)
@@ -2580,7 +2614,7 @@ Export[LoopTablesPath<>"B411simppermks.m",b411permdec]
 (*b411exps={{-4,0,0,0,2,1},{-4,0,1,0,1,1},{-4,0,1,0,2,1},{-4,1,1,0,1,0},{-3,0,-1,0,2,1},{-3,0,0,0,1,1},{-3,0,0,0,2,1},{-3,0,1,0,0,1},{-3,0,1,0,1,1},{-3,0,1,0,2,1},{-3,1,0,0,1,0},{-3,1,1,0,0,0},{-3,1,1,0,1,0},{-2,0,-2,0,2,1},{-2,0,-1,0,1,1},{-2,0,-1,0,2,1},{-2,0,0,0,0,1},{-2,0,0,0,1,1},{-2,0,0,0,2,1},{-2,0,0,1,1,0},{-2,0,1,0,-1,1},{-2,0,1,0,0,1},{-2,0,1,0,1,1},{-2,0,1,0,2,1},{-2,0,1,1,1,0},{-2,0,2,1,1,0},{-2,1,-1,0,1,0},{-2,1,0,0,0,0},{-2,1,0,0,1,0},{-2,1,1,0,-1,0},{-2,1,1,0,0,0},{-2,1,1,0,1,0},{-1,0,-3,0,2,1},{-1,0,-2,0,1,1},{-1,0,-2,0,2,1},{-1,0,-1,0,0,1},{-1,0,-1,0,1,1},{-1,0,-1,0,2,1},{-1,0,-1,1,1,0},{-1,0,0,0,-1,1},{-1,0,0,0,0,1},{-1,0,0,0,1,1},{-1,0,0,0,2,1},{-1,0,0,1,0,0},{-1,0,0,1,1,0},{-1,0,1,0,-2,1},{-1,0,1,0,-1,1},{-1,0,1,0,0,1},{-1,0,1,0,1,1},{-1,0,1,0,2,1},{-1,0,1,1,0,0},{-1,0,1,1,1,0},{-1,0,2,1,0,0},{-1,0,2,1,1,0},{-1,1,-2,0,1,0},{-1,1,-1,0,0,0},{-1,1,-1,0,1,0},{-1,1,0,0,-1,0},{-1,1,0,0,0,0},{-1,1,0,0,1,0},{-1,1,1,0,-2,0},{-1,1,1,0,-1,0},{-1,1,1,0,0,0},{-1,1,1,0,1,0},{0,0,-4,0,2,1},{0,0,-3,0,1,1},{0,0,-3,0,2,1},{0,0,-2,0,0,1},{0,0,-2,0,1,1},{0,0,-2,0,2,1},{0,0,-2,1,1,0},{0,0,-1,0,-1,1},{0,0,-1,0,0,1},{0,0,-1,0,1,1},{0,0,-1,0,2,1},{0,0,-1,1,0,0},{0,0,-1,1,1,0},{0,0,0,0,-2,1},{0,0,0,0,-1,1},{0,0,0,0,0,1},{0,0,0,0,1,1},{0,0,0,0,2,1},{0,0,0,1,-1,0},{0,0,0,1,0,0},{0,0,0,1,1,0},{0,0,1,0,-2,1},{0,0,1,0,-1,1},{0,0,1,0,0,1},{0,0,1,0,1,1},{0,0,1,0,2,1},{0,0,1,1,-1,0},{0,0,1,1,0,0},{0,0,1,1,1,0},{0,0,2,1,-1,0},{0,0,2,1,0,0},{0,0,2,1,1,0},{0,1,-3,0,1,0},{0,1,-2,0,0,0},{0,1,-2,0,1,0},{0,1,-1,0,-1,0},{0,1,-1,0,0,0},{0,1,-1,0,1,0},{0,1,0,0,-2,0},{0,1,0,0,-1,0},{0,1,0,0,0,0},{0,1,0,0,1,0},{0,1,1,0,-3,0},{0,1,1,0,-2,0},{0,1,1,0,-1,0},{0,1,1,0,0,0},{0,1,1,0,1,0},{1,0,-2,0,0,1},{1,0,-2,0,1,1},{1,0,-2,0,2,1},{1,0,-2,1,0,0},{1,0,-2,1,1,0},{1,0,-1,0,-1,1},{1,0,-1,0,0,1},{1,0,-1,0,1,1},{1,0,-1,0,2,1},{1,0,-1,1,-1,0},{1,0,-1,1,0,0},{1,0,-1,1,1,0},{1,0,0,0,-2,1},{1,0,0,0,-1,1},{1,0,0,0,0,1},{1,0,0,0,1,1},{1,0,0,0,2,1},{1,0,0,1,-2,0},{1,0,0,1,-1,0},{1,0,0,1,0,0},{1,0,0,1,1,0},{1,0,1,0,-2,1},{1,0,1,0,-1,1},{1,0,1,0,0,1},{1,0,1,0,1,1},{1,0,1,0,2,1},{1,0,1,1,-2,0},{1,0,1,1,-1,0},{1,0,1,1,0,0},{1,0,1,1,1,0},{1,0,2,1,-2,0},{1,0,2,1,-1,0},{1,0,2,1,0,0},{1,0,2,1,1,0},{1,1,-3,0,0,0},{1,1,-3,0,1,0},{1,1,-2,0,-1,0},{1,1,-2,0,0,0},{1,1,-2,0,1,0},{1,1,-1,0,-2,0},{1,1,-1,0,-1,0},{1,1,-1,0,0,0},{1,1,-1,0,1,0},{1,1,0,0,-3,0},{1,1,0,0,-2,0},{1,1,0,0,-1,0},{1,1,0,0,0,0},{1,1,0,0,1,0},{1,1,1,0,-3,0},{1,1,1,0,-2,0},{1,1,1,0,-1,0},{1,1,1,0,0,0},{1,1,1,0,1,0},{2,1,-4,0,0,0},{2,1,-3,0,-1,0},{2,1,-3,0,0,0},{2,1,-3,0,1,0},{2,1,-2,0,-2,0},{2,1,-2,0,-1,0},{2,1,-2,0,0,0},{2,1,-2,0,1,0},{2,1,-1,0,-3,0},{2,1,-1,0,-2,0},{2,1,-1,0,-1,0},{2,1,-1,0,0,0},{2,1,-1,0,1,0},{2,1,0,0,-4,0},{2,1,0,0,-3,0},{2,1,0,0,-2,0},{2,1,0,0,-1,0},{2,1,0,0,0,0},{2,1,0,0,1,0},{2,1,1,0,-3,0},{2,1,1,0,-2,0},{2,1,1,0,-1,0},{2,1,1,0,0,0},{2,1,1,0,1,0}};*)
 
 
-(* ::Subsubsection::Closed:: *)
+(* ::Subsubsection:: *)
 (*Generate ctabs coefs for fisherpoints*)
 
 
@@ -2592,33 +2626,29 @@ Export[LoopTablesPath<>"B411simppermks.m",b411permdec]
 
 (* ::Input:: *)
 (*(*Export ctabs*)*)
-(*Export[ctabpath<>"B411ctab.csv",b411exps];*)
-(*Export[LoopTablesPath<>"B411ctab.csv",b411exps];*)
+(*(*Export[ctabpath<>"B411ctab.csv",b411exps];*)
+(*Export[LoopTablesPath<>"B411ctab.csv",b411exps];*)*)
 
 
-(* ::Input:: *)
-(*genb411coef[k1sub_,k2sub_,k3sub_]:=Module[{filepath},*)
-(*filepath=saveLoopCoefPath[{k1sub,k2sub,k3sub},"B411"];*)
-(*If[Not[FileExistsQ[filepath]],Export[filepath,b411permdecfn[k1sub,k2sub,k3sub]]]*)
-(*];*)
+genb411coef[k1sub_,k2sub_,k3sub_]:=Module[{filepath},
+filepath=saveLoopCoefPath[{k1sub,k2sub,k3sub},"B411"];
+If[Not[FileExistsQ[filepath]],Export[filepath,b411permdecfn[k1sub,k2sub,k3sub]]]
+];
 
 
-(* ::Input:: *)
-(*Monitor[*)
-(*Do[genb411coef@@CMASStriEff[[j]],*)
-(*{j,1,Length[CMASStriEff]}]*)
-(*,j]*)
+Monitor[
+Do[genb411coef@@CMASStriEff[[j]],
+{j,1,Length[CMASStriEff]}]
+,j]
 
 
-(* ::Input:: *)
-(*Monitor[*)
-(*Do[genb411coef@@LOWZtriEff[[j]],*)
-(*{j,1,Length[LOWZtriEff]}]*)
-(*,j]*)
+Monitor[
+Do[genb411coef@@LOWZtriEff[[j]],
+{j,1,Length[LOWZtriEff]}]
+,j]
 
 
-(* ::Input:: *)
-(*Monitor[*)
-(*Do[genb411coef@@baseTriEff[[j]],*)
-(*{j,1,Length[baseTriEff]}]*)
-(*,j]*)
+Monitor[
+Do[genb411coef@@baseTriEff[[j]],
+{j,1,Length[baseTriEff]}]
+,j]
