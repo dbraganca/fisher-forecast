@@ -1,0 +1,3 @@
+[submodule "python-integer-powers"]
+	path = python-integer-powers
+	url = https://github.com/dbraganca/python-integer-powers.git
