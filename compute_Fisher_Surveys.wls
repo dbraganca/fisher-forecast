@@ -37,7 +37,12 @@ auxPath = "AUX_PATH"/.paths
 (*Bispectrum Fishers*)
 TriCMASSkeff = Import[covsPath<>"TriCMASSkeff.mtx"];
 TriLOWZkeff = Import[covsPath<>"TriLOWZkeff.mtx"];
+
 keffbase = Import[covsPath<>"baseTrikeff.mtx"];
+
+ktabraw = Table[0.001`+i 0.005,{i,0,300}];
+Basetri=makeTri[0.02,0.91,0.02];
+Length[Basetri]==Length[keffbase]
 
 
 (*export triangles to calculate jmats*)
@@ -45,14 +50,14 @@ keffbase = Import[covsPath<>"baseTrikeff.mtx"];
 Export[ctabpath<>"BOSS_tri_eff.csv",TriBOSSkeff]*)
 
 
-Export[ctabpath<>"base_tri_eff.csv",keffbase]
+(*Export[ctabpath<>"base_tri_eff.csv",keffbase]*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*BOSS Survey*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*BOSS numbers fully binned*)
 
 
@@ -119,7 +124,7 @@ dkBCMASS=dk->0.02154;
 dkBLOWZ=dk->0.02459;
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Power-spectrum Derivatives*)
 
 
@@ -178,7 +183,7 @@ LOWZNGCFisherFullP =(2048 - Length[covPLOWZngc] - 2)/(2048 - 1) (PLOWZngcderivsm
 LOWZSGCFisherFullP =(2048 - Length[covPLOWZsgc] - 2)/(2048 - 1) (PLOWZsgcderivsmonoquad//Transpose).Inverse[covPLOWZsgc].PLOWZsgcderivsmonoquad//Quiet;*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Power spectrum Covariance*)
 
 
@@ -206,7 +211,7 @@ Dimensions[COVCMASSPNS]== {21}
 Dimensions[COVLOWZPNS]== {21}
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Bi-spectrum derivatives*)
 
 
@@ -278,7 +283,7 @@ BderivsLOWZngc=BderivsLOWZ/.Dispatch[nbfixCMASSngc];
 BderivsLOWZsgc=BderivsLOWZ/.Dispatch[nbfixCMASSsgc];
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Bi-spectrum covariances*)
 
 
@@ -330,7 +335,7 @@ COVCMASS2PgenNS=GetFullzCovP[ktabraw2,CMASSpk,CMASSspec,bfixstochBOSSNS,dkP];
 
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*Fishers*)
 
 
@@ -379,11 +384,11 @@ FBLOWZ[[1,1]]<FBLOWZNS[[1,1]]
 FBCMASS[[1,1]]<FBCMASSNS[[1,1]]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*DESI*)
 
 
-(* ::Subsubsection:: *)
+(* ::Subsubsection::Closed:: *)
 (*DESI specifications and derivative computations*)
 
 
@@ -506,11 +511,13 @@ dkBD=dk->0.02;
 Get\[Sigma][ktab_, Cov_]:=Transpose@{ktab,1/mono[Cov]}//Interpolation;
 
 
-COVCMASSPgen=GetFullzCovP[ktabraw,CMASSpk,CMASSspec,bfixBOSS,dkPD];
+(*COVCMASSPgen=GetFullzCovP[ktabraw,CMASSpk,CMASSspec,bfixBOSS,dkPD];
 COVCMASSPgenNS=GetFullzCovP[ktabraw,CMASSpk,CMASSspec,bfixBOSSNS,dkPD];
 
 Export["aux_vars/COVCMASSPgen.m",COVCMASSPgen]
-Export["aux_vars/COVCMASSPgenNS.m",COVCMASSPgenNS]
+Export["aux_vars/COVCMASSPgenNS.m",COVCMASSPgenNS]*)
+COVCMASSPgen=Import["aux_vars/COVCMASSPgen.m"];
+COVCMASSPgenNS=Import["aux_vars/COVCMASSPgenNS.m"];
 
 
 \[Sigma]CMASS = Get\[Sigma][ktabraw, COVCMASSPgen];
@@ -767,7 +774,13 @@ FBD2fullNS = GetFisherB[BD2derivs,COVD2BNS,BLoopmaster];
 (*(*z,nb,V,N,Dg,fs,b1*)*)
 
 
-MMospec = {{2,2.5,3,3.5,4,4.5,5},10^-4 {25,12,6,3,1.5,0.8,0.4},10^9 {26.986863,27.63312497,27.20703913,26.25383626,25.06712437,23.80296403,22.54324749},{6.74671575`*^7,3.3159749963999998`*^7,1.6324223477999998`*^7,7.876150878`*^6,3.7600686555000003`*^6,1.9042371224000002`*^6,901729.8996000001`},{0.42020110428342006,0.36272799579672305,0.3188745725930273,0.2844001952601862,0.25662379231412885,0.23378307001365894,0.2146779141872147},{0.9466075281915435,0.9606657166004888,0.9687825324004987,0.973748370874903,0.9769321736957639,0.9790517015436108,0.9805057101340311},{2.5,3.3,4.1,4.9,5.8,6.6,7.4}};
+MMospec = {{2,2.5,3,3.5,4,4.5,5},
+			10^-4 {25,12,6,3,1.5,0.8,0.4},
+			10^9 {26.986863,27.63312497,27.20703913,26.25383626,25.06712437,23.80296403,22.54324749},
+			{6.74671575`*^7,3.3159749963999998`*^7,1.6324223477999998`*^7,7.876150878`*^6,3.7600686555000003`*^6,1.9042371224000002`*^6,901729.8996000001`},
+			{0.42020110428342006,0.36272799579672305,0.3188745725930273,0.2844001952601862,0.25662379231412885,0.23378307001365894,0.2146779141872147},
+			{0.9466075281915435,0.9606657166004888,0.9687825324004987,0.973748370874903,0.9769321736957639,0.9790517015436108,0.9805057101340311},
+			{2.5,3.3,4.1,4.9,5.8,6.6,7.4}};
 MMocut=4;
 
 
@@ -785,23 +798,24 @@ bfixMMNS = Join[bfixBOSSnonstoch,bfixstochNS];
 
 
 (* ::Input:: *)
-(*Getzeffs[MMospec,MMocut]*)
+(**)
 
 
 MMo1spec = MMospec[[All,;;MMocut]];
 MMo2spec = MMospec[[All,MMocut+1;;]];
 
 
+Getzeffs[MMospec,MMocut]
 Dg236=0.37721157585659637;
 Dg428 =0.2433118256462636;
 
 
-MMo1pk = PlinsubsT["plins/MMo1Nk/",2.36];
+(*MMo1pk = PlinsubsT["plins/MMo1Nk/",2.36];
 MMo2pk = PlinsubsT["plins/MMo2Nk/",4.28];
-
-
 Export[auxPath<>"MMo1pk.m",MMo1pk]
-Export[auxPath<>"MMo2pk.m",MMo2pk]
+Export[auxPath<>"MMo2pk.m",MMo2pk]*)
+MMo1pk=Import[auxPath<>"MMo1pk.m"];
+MMo2pk=Import[auxPath<>"MMo2pk.m"];
 
 
 (* ::Text:: *)
@@ -809,8 +823,6 @@ Export[auxPath<>"MMo2pk.m",MMo2pk]
 
 
 Getnbeff[MMospec,MMocut]
-
-
 nbMMo1 = nb->0.0017673778507420201`;
 nbMMo2 = nb->0.00011459250315671164`;
 
@@ -819,25 +831,17 @@ nbMMo2 = nb->0.00011459250315671164`;
 (*Get knls*)
 
 
-(* ::Input:: *)
-(*Getknl[pk_]:=Quiet[FindRoot[1/(2\[Pi]^2) NIntegrate[k^2 pk[k],{k,10^-5,kn}]-1.1525490955287694`,{kn,0.5}]]*)
-
-
-(* ::Input:: *)
-(*knlMMo1 = {knl->Getknl[MMo1pk[[1,3]]][[1,2]]}*)
-(*knlMMo2 = {knl->Getknl[MMo2pk[[1,3]]][[1,2]]}*)
+Getknl[pk_]:=Quiet[FindRoot[1/(2\[Pi]^2) NIntegrate[k^2 pk[k],{k,10^-5,kn}]-1.1525490955287694`,{kn,0.5}]]
+knlMMo1 = {knl->Getknl[MMo1pk[[1,3]]][[1,2]]}
+knlMMo2 = {knl->Getknl[MMo2pk[[1,3]]][[1,2]]}
 
 
 (* ::Text:: *)
 (*Parameters bestfit from BOSS, rescaled to MMo. (arxiv 1903.09208 Table 1)*)
 
 
-(* ::Input:: *)
-(*bzMMo=Transpose@{MMospec[[1]],MMospec[[7]]}//Interpolation;*)
-
-
-(* ::Input:: *)
-(*bzMMo[Getzeffs[MMospec,MMocut]]*)
+bzMMo=Transpose@{MMospec[[1]],MMospec[[7]]}//Interpolation;
+bzMMo[Getzeffs[MMospec,MMocut]]
 
 
 bfixMMo1=shiftBiasFix[3.073186555054316`,bfixMM];
@@ -852,22 +856,10 @@ coeffixMMo2 = Join[bfixMMo2,fnlfix,paramfix,knlMMo2];
 (*Base tab and setting kmax *)
 
 
-(* ::Input:: *)
-(*ktabraw = Table[0.001`+i 0.005,{i,0,300}];*)
-
-
-(* ::Input:: *)
-(*Basetri  =makeTri[0.02,0.91,0.02];*)
-(*keffbase = Import["baseTrikeff.mtx"];*)
-
-
-(* ::Input:: *)
-(*Bins = Basetri//Flatten//DeleteDuplicates//Sort;*)
-
-
-(* ::Input:: *)
-(*Setkmax[kmax_]:=Select[Bins,#<kmax&];*)
-(*goodTri[kmax_] := Complement[Table[i,{i,1,Length[Basetri]}],Table[Position[Basetri,Complement[Bins,Setkmax[kmax]][[i]]][[All,1]],{i,1,Length[Complement[Bins,Setkmax[kmax]]]}]//Flatten//DeleteDuplicates//Sort];*)
+Bins = Basetri//Flatten//DeleteDuplicates//Sort;
+Setkmax[kmax_]:=Select[Bins,#<kmax&];
+goodTri[kmax_] := Complement[Table[i,{i,1,Length[Basetri]}],Table[Position[Basetri,Complement[Bins,Setkmax[kmax]][[i]]][[All,1]],
+							{i,1,Length[Complement[Bins,Setkmax[kmax]]]}]//Flatten//DeleteDuplicates//Sort];
 
 
 (* ::Text:: *)
@@ -882,8 +874,15 @@ dkBMM=dk->0.02;
 (*Powerspectrum kmax*)
 
 
-(* ::Input:: *)
-(*Get\[Sigma][ktab_, Cov_]:=Transpose@{ktab,1/(Cov//mono)}//Interpolation;*)
+Get\[Sigma][ktab_, Cov_]:=Transpose@{ktab,1/(Cov//mono)}//Interpolation;
+
+
+COVCMASSPgenNS=Import["aux_vars/COVCMASSPgenNS.m"];
+CMASSpk=Import["aux_vars/CMASSpk.m"];
+
+
+(*check*)
+Variables[COVCMASSPgenNS[[1]]]=={\[Mu]1}
 
 
 \[Sigma]CMASSNS = Get\[Sigma][ktabraw, COVCMASSPgenNS];
@@ -899,12 +898,8 @@ GetkmaxNSP1L[\[Sigma]1_,pk1_]:=Quiet[FindRoot[Sqrt[\[Sigma]1[kmm]/\[Sigma]CMASSN
 
 kmaxMMo1 = GetkmaxNSP[Get\[Sigma][ktabraw, COVMMo1PNSkmm],MMo1pk][[1,2]]
 kmaxMMo2 =GetkmaxNSP[Get\[Sigma][ktabraw, COVMMo2PNSkmm],MMo2pk][[1,2]]
-
-
 kmaxMMo12L= GetkmaxNSP2L[Get\[Sigma][ktabraw, COVMMo1PNSkmm],MMo1pk][[1,2]]
 kmaxMMo22L =GetkmaxNSP2L[Get\[Sigma][ktabraw, COVMMo2PNSkmm],MMo2pk][[1,2]]
-
-
 kmaxMMo1Tree = GetkmaxNSP1L[Get\[Sigma][ktabraw, COVMMo1PNSkmm],MMo1pk][[1,2]]
 kmaxMMo2Tree =GetkmaxNSP1L[Get\[Sigma][ktabraw, COVMMo2PNSkmm],MMo2pk][[1,2]]
 
@@ -945,89 +940,168 @@ COVMMo1P2L=GetFullzCovP[ktabMMo12L,MMo1pk,MMo1spec,bfixMM,dkPMM];
 COVMMo2P2L=GetFullzCovP[ktabMMo22L,MMo2pk,MMo2spec,bfixMM,dkPMM];
 
 
-COVMMo1B=GetFullzCovB[MMotriangs1,MMo1pk,MMo1spec,bfixMM,dkBMM];
+(*COVMMo1B=GetFullzCovB[MMotriangs1,MMo1pk,MMo1spec,bfixMM,dkBMM];
 COVMMo2B=GetFullzCovB[MMotriangs2,MMo2pk,MMo2spec,bfixMM,dkBMM];
-
-
 Export[auxPath<>"COVMMo1B.m",COVMMo1B]
-Export[auxPath<>"COVMMo2B.m",COVMMo2B]
+Export[auxPath<>"COVMMo2B.m",COVMMo2B]*)
+COVMMo1B=Import[auxPath<>"COVMMo1B.m"];
+COVMMo2B=Import[auxPath<>"COVMMo2B.m"];
 
-
-(* ::Input:: *)
-(*COVMMo1B=Import[auxPath<>"COVMMo1B.m"];*)
-(*COVMMo2B=Import[auxPath<>"COVMMo2B.m"];*)
-
-
-(* ::Input:: *)
-(*COVMMo1BTree=GetFullzCovB[MMotriangs1T,MMo1pk,MMo1spec,bfixstoch,dkBMM];*)
-(*COVMMo2BTree=GetFullzCovB[MMotriangs2T,MMo2pk,MMo2spec,bfixstoch,dkBMM];*)
+(*COVMMo1BTree=GetFullzCovB[MMotriangs1T,MMo1pk,MMo1spec,bfixMM,dkBMM];
+COVMMo2BTree=GetFullzCovB[MMotriangs2T,MMo2pk,MMo2spec,bfixMM,dkBMM];
+Export[auxPath<>"COVMMo1BTree.m",COVMMo1BTree]
+Export[auxPath<>"COVMMo2BTree.m",COVMMo2BTree]*)
+COVMMo1BTree=Import[auxPath<>"COVMMo1BTree.m"];
+COVMMo2BTree=Import[auxPath<>"COVMMo2BTree.m"];
 
 
 (* ::Text:: *)
 (*Analytical Covariance with Full redshift- No shot noise*)
 
 
-(* ::Input:: *)
-(*COVMMo1PNS=GetFullzCovP[ktabMMo1,MMo1pk,MMo1spec,bfixstochNS,dkPMM];*)
-(*COVMMo2PNS=GetFullzCovP[ktabMMo2,MMo2pk,MMo2spec,bfixstochNS,dkPMM];*)
+COVMMo1PNS=GetFullzCovP[ktabMMo1,MMo1pk,MMo1spec,bfixMMNS,dkPMM];
+COVMMo2PNS=GetFullzCovP[ktabMMo2,MMo2pk,MMo2spec,bfixMMNS,dkPMM];
 
 
-(* ::Input:: *)
-(*COVMMo1PNS2L=GetFullzCovP[ktabMMo12L,MMo1pk,MMo1spec,bfixstochNS,dkPMM];*)
-(*COVMMo2PNS2L=GetFullzCovP[ktabMMo22L,MMo2pk,MMo2spec,bfixstochNS,dkPMM];*)
+COVMMo1PNS2L=GetFullzCovP[ktabMMo12L,MMo1pk,MMo1spec,bfixMMNS,dkPMM];
+COVMMo2PNS2L=GetFullzCovP[ktabMMo22L,MMo2pk,MMo2spec,bfixMMNS,dkPMM];
 
 
-(* ::Input:: *)
-(*COVMMo1BNS=GetFullzCovB[MMotriangs1,MMo1pk,MMo1spec,bfixstochNS,dkBMM];*)
-(*COVMMo2BNS=GetFullzCovB[MMotriangs2,MMo2pk,MMo2spec,bfixstochNS,dkBMM];*)
-
-
-(* ::Input:: *)
-(*Export["MMderivsCovs/COVMMo1BNS.m",COVMMo1BNS]*)
-(*Export["MMderivsCovs/COVMMo2BNS.m",COVMMo2BNS]*)
-
-
-(* ::Input:: *)
-(*COVMMo1BNS=Import["MMderivsCovs/COVMMo1BNS.m"];*)
-(*COVMMo2BNS=Import["MMderivsCovs/COVMMo2BNS.m"];*)
+(*COVMMo1BNS=GetFullzCovB[MMotriangs1,MMo1pk,MMo1spec,bfixMMNS,dkBMM];
+COVMMo2BNS=GetFullzCovB[MMotriangs2,MMo2pk,MMo2spec,bfixMMNS,dkBMM];
+Export[auxPath<>"COVMMo1BNS.m",COVMMo1BNS]
+Export[auxPath<>"COVMMo2BNS.m",COVMMo2BNS]*)
+COVMMo1BNS=Import[auxPath<>"COVMMo1BNS.m"];
+COVMMo2BNS=Import[auxPath<>"COVMMo2BNS.m"];
 
 
 (* ::Text:: *)
 (*Powerspectrum Derivatives*)
 
 
-(* ::Input:: *)
-(*PMMo1derivs =Monitor[ Table[P1Loopderivs[ktabMMo1[[i]],MMo1pk],{i,1,Length[ktabMMo1]}],i]/.coeffixMMo1/.nbMMo1;*)
-(*PMMo2derivs = Monitor[Table[P1Loopderivs[ktabMMo2[[i]],MMo2pk],{i,1,Length[ktabMMo2]}],i]/.coeffixMMo2/.nbMMo2;*)
+PMMo1derivs =Monitor[Table[P1LoopDerivs[ktabMMo1[[i]],MMo1pk],{i,1,Length[ktabMMo1]}],i]/.coeffixMMo1/.nbMMo1;
+PMMo2derivs = Monitor[Table[P1LoopDerivs[ktabMMo2[[i]],MMo2pk],{i,1,Length[ktabMMo2]}],i]/.coeffixMMo2/.nbMMo2;
 
 
-(* ::Input:: *)
-(*PMMo1derivs2L =Monitor[ Table[P1Loopderivs[ktabMMo12L[[i]],MMo1pk],{i,1,Length[ktabMMo12L]}],i]/.coeffixMMo1/.nbMMo1;*)
-(*PMMo2derivs2L = Monitor[Table[P1Loopderivs[ktabMMo22L[[i]],MMo2pk],{i,1,Length[ktabMMo22L]}],i]/.coeffixMMo2/.nbMMo2;*)
+PMMo1derivs2L =Monitor[Table[P1LoopDerivs[ktabMMo12L[[i]],MMo1pk],{i,1,Length[ktabMMo12L]}],i]/.coeffixMMo1/.nbMMo1;
+PMMo2derivs2L = Monitor[Table[P1LoopDerivs[ktabMMo22L[[i]],MMo2pk],{i,1,Length[ktabMMo22L]}],i]/.coeffixMMo2/.nbMMo2;
 
 
 (* ::Text:: *)
 (*Bispectrum Derivatives*)
 
 
-(* ::Input:: *)
-(*BMMo1derivsT=Monitor[Table[BTreederivs[keffMMo1T[[si]],MMo1pk]/.Dispatch[coeffixMMo1]/.nbMMo1,{si,1,Length[keffMMo1T]}],si];//AbsoluteTiming*)
-(*BMMo2derivsT=Monitor[Table[BTreederivs[keffMMo2T[[si]],MMo2pk]/.Dispatch[coeffixMMo2]/.nbMMo2,{si,1,Length[keffMMo2T]}],si];//AbsoluteTiming*)
+BMMo1derivsT=Monitor[Table[BTreeDerivs[keffMMo1T[[si]],MMo1pk]/.Dispatch[coeffixMMo1]/.nbMMo1,{si,1,Length[keffMMo1T]}],si];//AbsoluteTiming
+BMMo2derivsT=Monitor[Table[BTreeDerivs[keffMMo2T[[si]],MMo2pk]/.Dispatch[coeffixMMo2]/.nbMMo2,{si,1,Length[keffMMo2T]}],si];//AbsoluteTiming
+
+
+Length[keffMMo1]==805
+Length[keffMMo2]==8878
+
+
+(*Calculate derivatives, one at a time instead of table*)
+(*BMMo1derivs=ConstantArray[0,Length[keffMMo1]];
+BMMo2derivs=ConstantArray[0,Length[keffMMo2]];*)
+
+
+BMMo1derivsimp=Import["aux_vars/BMMo1derivs.m"];
+(*BMMo2derivsimp=Import["aux_vars/BMMo2derivs.m"];*)
+(*BMMo1derivs[[1;;Length[BMMo1derivsimp]]]=BMMo1derivsimp;*)
+
+
+BMMo1derivs[1]=ConstantArray[0,300];
+firstIndex[1]=1;
+finalIndex[1]=firstIndex[1]+Length[BMMo1derivs[1]]-1;
+
+BMMo1derivs[2]=ConstantArray[0,300];
+firstIndex[2]=finalIndex[1]+1;
+finalIndex[2]=firstIndex[2]+Length[BMMo1derivs[2]]-1;
+
+BMMo1derivs[3]=ConstantArray[0,Length[keffMMo1]-Length[BMMo1derivs[2]]-Length[BMMo1derivs[1]]];
+firstIndex[3]=finalIndex[2]+1;
+finalIndex[3]=firstIndex[3]+Length[BMMo1derivs[3]]-1;
+
+Do[keffMMo1part[part]=keffMMo1[[firstIndex[part];;finalIndex[part]]],{part,1,3}]
+
+
+(*BMMo1derivs[1]=BMMo1derivsimp[[1;;300]];*)
+ClearAll[BMMo1derivsimp]
+BMMo1derivs[1]=.
+
+
+(*Column@Thread@{Names["FisherFunctions`*"], ByteCount[#] & /@ ToExpression /@ Names["FisherFunctions`*"]}*)
+
+
+dispatcher = Dispatch[Join[coeffixMMo1,{nbMMo1}]];
+
+Monitor[
+Do[
+	Bderivslist = BMMo1derivs[part];
+	triList=keffMMo1part[part];
+	Do[
+		If[(Bderivslist[[j]]==0)||(Length[Bderivslist[[j]]]==0),
+			Bderivslist[[j]]=B1LoopDerivs[triList[[j]],MMo1pk]/.dispatcher];,
+	{j,1,Length[triList]}];
+		
+	Export["aux_vars/BMMo1derivs"<>ToString[part]<>".m",Bderivslist];
+	(*BMMo1derivs[part]=Bderivslist;*),
+{part,2,3}],
+Row[{ProgressIndicator[j,{1,Length[triList]}],j," - Part:",part}," "]]//AbsoluteTiming
+
+
+(*Export["aux_vars/BMMo1derivs.m",BMMo1derivs]*)
+
+
+BMMo2derivs[1]=ConstantArray[0,500];
+firstIndex2[1]=1;
+finalIndex2[1]=firstIndex2[1]+Length[BMMo2derivs[1]]-1;
+BMMo2derivs[2]=ConstantArray[0,1000];
+firstIndex2[2]=finalIndex2[1]+1;
+finalIndex2[2]=firstIndex2[2]+Length[BMMo2derivs[2]]-1;
+BMMo2derivs[3]=ConstantArray[0,Length[keffMMo1]-Length[BMMo2derivs[2]]-Length[BMMo2derivs[1]]];
+firstIndex2[3]=finalIndex2[2]+1;
+finalIndex2[3]=firstIndex2[3]+Length[BMMo2derivs[3]]-1;
+
+
+(*BD2derivs[[1;;Length[BD2derivsimp]]]=BD2derivsimp;*)
+
+
+dispatcher = Dispatch[Join[coeffixMMo2,{nbMMo2}]];
+
+Monitor[
+Do[Bderivslist = BMMo2derivs[part];
+	Do[If[(Bderivslist[[j]]==0)||(Length[Bderivslist[[j]]]==0),
+			Bderivslist[[j]]=B1LoopDerivs[keffMMo2[[j]],MMo2pk]/.dispatcher];,
+		{j,firstIndex2[part],finalIndex2[part]}];
+		
+	Export["aux_vars/BMMo2derivs"<>ToString[part]<>".m",Bderivslist];
+	BMMo2derivs[part]=Bderivslist;
+	,{part,1,3}],
+	Row[{ProgressIndicator[j,{1,Length[keffMMo2]}],j," - Part:",part}," "]]//AbsoluteTiming
+
+
+(*{400.0957859`,Null}*)
+(*Export["aux_vars/BMMo2derivs.m",BMMo2derivs]*)
+
+
+(*checks*)
+Dimensions[BMMo1derivs]
+Dimensions[BMMo2derivs]
 
 
 (* ::Input:: *)
-(*BMMo1derivs=Monitor[Table[B1Loopderivs[keffMMo1[[si]],MMo1pk]/.Dispatch[coeffixMMo1]/.nbMMo1,{si,1,Length[keffMMo1]}],si];//AbsoluteTiming*)
-(*BMMo2derivs=Monitor[Table[B1Loopderivs[keffMMo2[[si]],MMo2pk]/.Dispatch[coeffixMMo2]/.nbMMo2,{si,1,Length[keffMMo2]}],si];//AbsoluteTiming*)
-(*Export["MMderivsCovs/BMMo1derivs.m",BMMo1derivs]*)
-(*Export["MMderivsCovs/BMMo2derivs.m",BMMo2derivs]*)
+(*(*BMMo1derivs=Monitor[Table[B1LoopDerivs[keffMMo1[[si]],MMo1pk]/.Dispatch[coeffixMMo1]/.nbMMo1,{si,1,Length[keffMMo1]}],si];//AbsoluteTiming*)
+(*BMMo2derivs=Monitor[Table[B1LoopDerivs[keffMMo2[[si]],MMo2pk]/.Dispatch[coeffixMMo2]/.nbMMo2,{si,1,Length[keffMMo2]}],si];//AbsoluteTiming*)
+(*Export[auxPath<>"BMMo1derivs.m",BMMo1derivs]*)
+(*Export[auxPath<>"BMMo2derivs.m",BMMo2derivs]*)*)
 
 
 (* ::Input:: *)
-(*BMMo1derivs=Import["MMderivsCovs/BMMo1derivs.m"];*)
-(*BMMo2derivs=Import["MMderivsCovs/BMMo2derivs.m"];*)
+(*BMMo1derivs=Import[auxPath<>"BMMo1derivs.m"];*)
+(*BMMo2derivs=Import[auxPath<>"BMMo2derivs.m"];*)
 
 
-(* ::Subsection::Closed:: *)
+(* ::Subsubsection::Closed:: *)
 (*Fishers *)
 
 
@@ -1232,6 +1306,3 @@ Exporter4[Fisher_,name_]:=Export[name,GetFExp4[Fisher]]
 (* ::Input:: *)
 (*Exporter[FPD1fullNS+FPD2fullNS,FisherPath<>"DESI/PanamufullzNS.mtx"]*)
 (*Exporter[FPD1fullNS+FPD2fullNS+FBD1fullNS+FBD2fullNS,FisherPath<>"DESI/PBanamufullzNS.mtx"]*)
-
-
-

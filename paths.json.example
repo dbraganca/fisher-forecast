@@ -5,5 +5,6 @@
 	"AUX_PATH": "aux_vars/",
 	"LOOP_COEFS_PATH": "",
 	"PLOOP_JMAT_PATH": "",
-	"BLOOP_JMAT_PATH": ""
+	"BLOOP_JMAT_PATH": "",
+	"FISHER_PATH":"Fishers/"
 }

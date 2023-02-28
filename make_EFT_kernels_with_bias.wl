@@ -568,11 +568,11 @@ Do[
 (*K4rsym[q1_,q2_,q3_,q4_]:=K4distrsym[q1,q2,q3,q4]+K4rsome[q1,q2,q3,q4];*)
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*PS bias*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*P22*)
 
 
@@ -660,7 +660,7 @@ Export[LoopTablesPath<>"P22biaslist.m",p22biaslist]
 Export[LoopTablesPath<>"P22coefsdec.m",p22coefsdec]
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*P13*)
 
 
@@ -800,7 +800,7 @@ Export[LoopTablesPath<>"P13biaslist.m",p13biaslist]
 Export[LoopTablesPath<>"P13coefsdec.m",p13coefsdec]
 
 
-(* ::Section:: *)
+(* ::Section::Closed:: *)
 (*Tables of substitutions of integrals with \[Mu]0 into integrals of \[Mu]1, \[Mu]2*)
 
 
@@ -1428,7 +1428,7 @@ Export[AuxPath<>"mu0solk1_vec_upto2.m",{1,\[Mu]0sol1,\[Mu]0sol2}]
 (*rules\[Mu]01={x^a_.->angint[a,0,0,0],(Sqrt[1-x^2])^b_.->angint[0,b,0,0], Cos[\[Beta]]^c_.->angint[0,0,c,0],Sin[\[Beta]]^d_.->angint[0,0,0,d]};*)
 
 
-(* ::Subsection:: *)
+(* ::Subsection::Closed:: *)
 (*Btree with permutations*)
 
 
@@ -1608,28 +1608,25 @@ compressor[newctab]//Expand
 (**)*)
 
 
-(* ::Input:: *)
-(*b222part3exp=b222tomu4[[3]]//Expand;*)
-(*b222part3expfn[k1_,k2_,k3_]=b222part3exp;*)
-(*b222part3ctabfn[k1_,k2_,k3_]=compressor[getCtab[b222part3exp]];*)
+b222part3exp=b222tomu4[[3]]//Expand;
+b222part3expfn[k1_,k2_,k3_]=b222part3exp;
+b222part3ctabfn[k1_,k2_,k3_]=compressor[getCtab[b222part3exp]];
 
 
-(* ::Input:: *)
-(*(*Function to generate the ctab for a given set of k1, k2, k3*)*)
-(*b222\[Mu]6ctab[k1_,k2_,k3_]:=Module[{b222coefctab,\[Mu]0ctab,jointab},*)
-(*b222coefctab=b222part3ctabfn[k1,k2,k3];*)
-(*\[Mu]0ctab=\[Mu]0ctab6[k1,k2,k3];*)
-(*jointab=JoinCtabs[b222coefctab,\[Mu]0ctab]//Expand*)
-(*];*)
+(*Function to generate the ctab for a given set of k1, k2, k3*)
+b222\[Mu]6ctab[k1_,k2_,k3_]:=Module[{b222coefctab,\[Mu]0ctab,jointab},
+b222coefctab=b222part3ctabfn[k1,k2,k3];
+\[Mu]0ctab=\[Mu]0ctab6[k1,k2,k3];
+jointab=JoinCtabs[b222coefctab,\[Mu]0ctab]//Expand
+];
 
 
 (* ::Subsubsection:: *)
 (*Join \[Mu]0^5 and \[Mu]0^6 ctabs*)
 
 
-(* ::Input:: *)
-(*(*Join \[Mu]5 and \[Mu]6 ctabs*)*)
-(*b222\[Mu]56ctab[k1_,k2_,k3_]:=compressor[Join[b222\[Mu]5ctab[k1,k2,k3],b222\[Mu]6ctab[k1,k2,k3]]];*)
+(*Join \[Mu]5 and \[Mu]6 ctabs*)
+b222\[Mu]56ctab[k1_,k2_,k3_]:=compressor[Join[b222\[Mu]5ctab[k1,k2,k3],b222\[Mu]6ctab[k1,k2,k3]]];
 
 
 (* ::Subsubsection:: *)
@@ -1639,8 +1636,9 @@ compressor[newctab]//Expand
 (*Create example of ctab to obtain the bias monomials and variables*)
 b222part23ctab=b222\[Mu]56ctab[0.11,0.12,0.13];
 
-(*b222part1coefs//Variables*)
-(*b222part23ctab//Variables*)
+
+(*b222part1coefs//Variables
+b222part23ctab//Variables*)
 
 
 b222vars={b1,b2,b5,f1,\[Mu]1,\[Mu]2};
@@ -1714,11 +1712,10 @@ f1^6 \[Mu]1^3 \[Mu]2^9,f1^6 \[Mu]1^2 \[Mu]2^10};
 b222biaslister=biaslisterfn[b222vars,b222biaslist];
 
 
-(* ::Input:: *)
-(*(*apply decomposition in biases to all ctab coefficients and simplify - this takes 7 minutes*)*)
-(*b222biascoef=Simplify[b222biaslister/@b222part1coefs];*)
-(*b222part1ctabdec=MapThread[Append,{b222part1exps,b222biascoef}];*)
+(*apply decomposition in biases to all ctab coefficients and simplify - this takes 7 minutes*)
 
+(*b222biascoef=Simplify[b222biaslister/@b222part1coefs];
+b222part1ctabdec=MapThread[Append,{b222part1exps,b222biascoef}];*)
 
 (*Save decomposed ctab*)
 
@@ -1748,16 +1745,8 @@ b222ctabdec[k1_,k2_,k3_]:=compressor[Join[b222\[Mu]0to4ctabdec[k1,k2,k3],b222\[M
 (*Finally, get list of exponents for b222*)
 
 
-(* ::Input:: *)
-(*ctabexample=b222ctabdec[0.11,0.12,0.13];*)
-
-
-(* ::Input:: *)
-(*b222exps=ctabexample[[All,1;;3]]*)
-
-
-(* ::InheritFromParent:: *)
-(*b222exps={{-4,2,2},{-3,1,2},{-3,2,1},{-3,2,2},{-2,0,2},{-2,1,1},{-2,1,2},{-2,2,0},{-2,2,1},{-2,2,2},{-1,-1,2},{-1,0,1},{-1,0,2},{-1,1,0},{-1,1,1},{-1,1,2},{-1,2,-1},{-1,2,0},{-1,2,1},{-1,2,2},{0,-2,2},{0,-1,1},{0,-1,2},{0,0,0},{0,0,1},{0,0,2},{0,1,-1},{0,1,0},{0,1,1},{0,1,2},{0,2,-2},{0,2,-1},{0,2,0},{0,2,1},{0,2,2},{1,-3,2},{1,-2,1},{1,-2,2},{1,-1,0},{1,-1,1},{1,-1,2},{1,0,-1},{1,0,0},{1,0,1},{1,0,2},{1,1,-2},{1,1,-1},{1,1,0},{1,1,1},{1,1,2},{1,2,-3},{1,2,-2},{1,2,-1},{1,2,0},{1,2,1},{1,2,2},{2,-4,2},{2,-3,1},{2,-3,2},{2,-2,0},{2,-2,1},{2,-2,2},{2,-1,-1},{2,-1,0},{2,-1,1},{2,-1,2},{2,0,-2},{2,0,-1},{2,0,0},{2,0,1},{2,0,2},{2,1,-3},{2,1,-2},{2,1,-1},{2,1,0},{2,1,1},{2,1,2},{2,2,-4},{2,2,-3},{2,2,-2},{2,2,-1},{2,2,0},{2,2,1},{2,2,2}};*)
+ctabexample=b222ctabdec[0.11,0.12,0.13];
+b222exps=ctabexample[[All,1;;3]]
 
 
 (* ::Subsubsection:: *)
@@ -1769,24 +1758,21 @@ b222ctabdec[k1_,k2_,k3_]:=compressor[Join[b222\[Mu]0to4ctabdec[k1,k2,k3],b222\[M
 (*Export[LoopTablesPath<>"B222ctab.csv",b222exps]*)
 
 
-Export[LoopTablesPath<>"B222simpcoefslist.m",b222biaslist]
+(*Export[LoopTablesPath<>"B222simpcoefslist.m",b222biaslist]*)
 
 
-(* ::Input:: *)
-(*genb222coef[k1sub_,k2sub_,k3sub_]:=Module[{filepath},*)
-(*filepath=saveLoopCoefPath[{k1sub,k2sub,k3sub},"B222"];*)
-(*If[Not[FileExistsQ[filepath]],Export[filepath,b222ctabdec[k1sub,k2sub,k3sub][[All,4]]]]*)
-(*];*)
+genb222coef[k1sub_,k2sub_,k3sub_]:=Module[{filepath},
+filepath=saveLoopCoefPath[{k1sub,k2sub,k3sub},"B222"];
+If[Not[FileExistsQ[filepath]],Export[filepath,b222ctabdec[k1sub,k2sub,k3sub][[All,4]]]]
+];
 
 
-(* ::Input:: *)
-(*Monitor[Do[genb222coef@@CMASStriEff[[i]],*)
-(*{i,1,Length[CMASStriEff]}]//AbsoluteTiming,i];*)
+Monitor[Do[genb222coef@@CMASStriEff[[i]],
+{i,1,Length[CMASStriEff]}]//AbsoluteTiming,i];
 
 
-(* ::Input:: *)
-(*Monitor[Do[genb222coef@@LOWZtriEff[[i]],*)
-(*{i,1,Length[LOWZtriEff]}]//AbsoluteTiming,i];*)
+Monitor[Do[genb222coef@@LOWZtriEff[[i]],
+{i,1,Length[LOWZtriEff]}]//AbsoluteTiming,i];
 
 
 Monitor[Do[genb222coef@@baseTriEff[[i]],

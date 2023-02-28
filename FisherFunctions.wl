@@ -14,7 +14,8 @@ Bc9,Bc10,Bc11,Bc12,Bc13,Bc14,Bd1,
 Bd2,Bd3,Be3,Be4,Be5,Be6,Be7,Be8,
 Be9,Be10,Be11,Be12,Tst,
 nb,knl,
-hback};
+hback,
+\[Mu]1};
 
 fi::usage = "Number format for jmat imports"; 
 Tfi::usage = "String format for jmat imports"; 
@@ -211,12 +212,6 @@ nonstoch = Complement[BAllcoefs,stochp];
 
 
 (*Bias transformation*)
-(*Change bestfit to new linear bias (this is an approximation, where we assume all biases rescale like the linear one)*)
-changeb1[biasfix_,newb1_] := Thread[biasfix[[All,1]]-> biasfix[[All,2]] newb1/biasfix[[1,2]]];
-
-(* Adjust biases with new time assuming 1/D dependence *)
-Evolve[Dgold_,Dgnew_,biasfix_]:=Join[Thread[nonstoch->(nonstoch/.biasfix) Dgold/Dgnew],
-									 Thread[stochp->(stochp/.biasfix)]];
 									 
 (* Adjust biases with new b1 for new redshift*)
 shiftBiasFixb1[b1old_,b1new_,biasfixold_]:=Join[Thread[nonstoch->(nonstoch/.biasfixold) b1new/b1old],
